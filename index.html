@@ -1,0 +1,1191 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Truth Commerce | A fundação da escala digital.</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================
+   1. VARIÁVEIS - ESTÉTICA FRAMER PREMIUM
+========================================= */
+:root {
+  --bg-base: #040507; /* Fundo base super profundo, quase preto, mas não #000 */
+  --bg-surface: #0a0c10; /* Fundo das seções de destaque */
+  
+  --green: #07dd2b; /* O SEU VERDE ORIGINAL DA MARCA */
+  --green-glow: rgba(7, 221, 43, 0.2);
+  
+  --text-main: #FFFFFF;
+  --text-muted: #A1A1AA; /* Cinza prateado sofisticado */
+  
+  --border-light: rgba(255, 255, 255, 0.06);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-base);
+  color: var(--text-main);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =========================================
+   2. AMBIENTE E ILUMINAÇÃO (O SEGREDO DO FRAMER)
+========================================= */
+/* Fundo Noise Sutil */
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.25;
+}
+
+/* Flares e Luzes Difusas de Fundo */
+.ambient-lighting {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: 
+    /* Flare Verde Topo Direito */
+    radial-gradient(1000px circle at 85% 0%, rgba(7, 221, 43, 0.08), transparent 100%),
+    /* Flare Prata Meio Esquerda */
+    radial-gradient(800px circle at -10% 40%, rgba(255, 255, 255, 0.03), transparent 100%),
+    /* Flare Verde Rodapé */
+    radial-gradient(1200px circle at 50% 110%, rgba(7, 221, 43, 0.06), transparent 100%);
+  filter: blur(60px);
+}
+
+/* Tech Grid suave */
+.tech-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-size: 80px 80px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 10%, transparent 70%);
+  mask-image: radial-gradient(ellipse at center, black 10%, transparent 70%);
+}
+
+/* =========================================
+   3. TIPOGRAFIA & BOTÕES DE ALTO PADRÃO
+========================================= */
+section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; padding: 140px 5%; z-index: 2; }
+.text-center { text-align: center; } .text-left { text-align: left; }
+
+/* =========================================
+   3.1. SECTION SKINS (variação de fundo por seção)
+   - Mantém o "ambiente" global, mas dá identidade própria a cada bloco
+========================================= */
+.section-skin { isolation: isolate; }
+.section-skin::before,
+.section-skin::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  z-index: 0;
+  pointer-events: none;
+}
+.section-skin > * { position: relative; z-index: 1; }
+
+/* HERO: flare e vinheta suave */
+.skin-hero::before {
+  background:
+    radial-gradient(900px circle at 25% 30%, rgba(7, 221, 43, 0.10), transparent 60%),
+    radial-gradient(700px circle at 80% 20%, rgba(255, 255, 255, 0.05), transparent 55%),
+    linear-gradient(180deg, rgba(255,255,255,0.02), transparent 35%, rgba(0,0,0,0.35) 100%);
+}
+.skin-hero::after {
+  background: radial-gradient(1200px circle at 50% 100%, rgba(7, 221, 43, 0.08), transparent 65%);
+  opacity: 0.9;
+}
+
+/* ALERTA: “capítulo” com brilho limpo */
+.skin-alert::before {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.03), transparent 25%, transparent 75%, rgba(255,255,255,0.02) 100%),
+    radial-gradient(900px circle at 15% 40%, rgba(255,255,255,0.05), transparent 60%);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.skin-alert::after {
+  background: radial-gradient(900px circle at 85% 40%, rgba(7, 221, 43, 0.07), transparent 65%);
+  opacity: 0.7;
+}
+
+/* MÉTODO (surface) com textura pontilhada */
+.skin-metodo {
+  background: linear-gradient(180deg, #0a0c10 0%, #07090d 100%);
+}
+.skin-metodo::after {
+  background-image:
+    radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+    radial-gradient(rgba(7,221,43,0.05) 1px, transparent 1px);
+  background-size: 54px 54px, 90px 90px;
+  background-position: 0 0, 20px 30px;
+  -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 72%);
+  mask-image: radial-gradient(ellipse at center, black 25%, transparent 72%);
+  opacity: 0.22;
+}
+
+/* SERVIÇOS: listras diagonais bem sutis + flare verde */
+.skin-services::before {
+  background:
+    radial-gradient(900px circle at 80% 35%, rgba(7, 221, 43, 0.10), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0) 45%, rgba(255,255,255,0.01) 100%);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.skin-services::after {
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(255,255,255,0.05) 0px,
+    rgba(255,255,255,0.05) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+  opacity: 0.05;
+}
+
+/* PROJETOS: campo “estelar” discreto (sem ficar verde) */
+.skin-projects::before {
+  background:
+    radial-gradient(1100px circle at 50% 15%, rgba(255,255,255,0.04), transparent 60%),
+    radial-gradient(900px circle at 15% 70%, rgba(7, 221, 43, 0.07), transparent 65%),
+    linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.45) 100%);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.skin-projects::after {
+  background-image:
+    radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px),
+    radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 120px 120px, 60px 60px;
+  background-position: 10px 20px, 0 0;
+  opacity: 0.08;
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 78%);
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 78%);
+}
+
+/* DEPOIMENTOS: superfície um pouco mais “clean” */
+.skin-testimonials::before {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(10,12,16,0.15) 50%, rgba(0,0,0,0.25) 100%),
+    radial-gradient(900px circle at 30% 60%, rgba(255,255,255,0.05), transparent 60%);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+/* FAQ (Innoflow: tema claro, layout clean, sem "surface" complexa) */
+.skin-faq {
+  /* Nenhum efeito; seção controlada pela classe .theme-light */
+  background: transparent;
+}
+
+/* =========================================
+   3.2. TEMA CLARO (Astra-like)
+   - Seções claras de “respiro” (branco/cinza), mantendo o verde como acento
+========================================= */
+.theme-light {
+  color: #0b0c0e;
+}
+.theme-light::before {
+  background:
+    radial-gradient(900px circle at 18% 0%, rgba(7, 221, 43, 0.10), transparent 62%),
+    radial-gradient(900px circle at 85% 35%, rgba(0, 0, 0, 0.06), transparent 58%),
+    linear-gradient(180deg, #f6f6f7 0%, #eeeeef 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -1px 0 rgba(0,0,0,0.06);
+}
+.theme-light::after {
+  background-image:
+    radial-gradient(rgba(0,0,0,0.12) 1px, transparent 1px),
+    radial-gradient(rgba(0,0,0,0.06) 1px, transparent 1px);
+  background-size: 120px 120px, 60px 60px;
+  background-position: 10px 20px, 0 0;
+  opacity: 0.10;
+  -webkit-mask-image: radial-gradient(ellipse at center, black 35%, transparent 80%);
+  mask-image: radial-gradient(ellipse at center, black 35%, transparent 80%);
+}
+
+/* Ajustes tipográficos/elementos dentro de seções claras */
+.theme-light .title-huge,
+.theme-light .title-medium { color: #0b0c0e; }
+.theme-light .subtext { color: rgba(0,0,0,0.62); }
+.theme-light .accent { color: var(--green); text-shadow: none; }
+.theme-light .cta-pre-text { color: #0b0c0e; }
+
+.theme-light .tag {
+  color: var(--green);
+  border-color: rgba(7, 221, 43, 0.28);
+  background: rgba(7, 221, 43, 0.06);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.theme-light .btn {
+  color: #0b0c0e;
+  background: rgba(255,255,255,0.70);
+  border: 1px solid rgba(0,0,0,0.14);
+}
+.theme-light .btn:hover {
+  background: rgba(255,255,255,0.90);
+}
+.theme-light .btn.primary {
+  background: #0b0c0e;
+  color: #fff;
+  border: none;
+}
+.theme-light .btn.primary:hover {
+  background: var(--green);
+  color: #000;
+}
+
+.title-huge { font-family: 'Sora', sans-serif; font-size: clamp(3rem, 6vw, 6rem); font-weight: 700; line-height: 1.05; letter-spacing: -0.04em; margin: 0; text-transform: uppercase; }
+.title-medium { font-family: 'Sora', sans-serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; margin: 0 0 24px 0; }
+.accent { color: var(--green); text-shadow: 0 0 30px rgba(7,221,43,0.3); }
+
+.subtext { font-size: clamp(1rem, 1.2vw, 1.15rem); color: var(--text-muted); max-width: 650px; line-height: 1.7; font-weight: 400; letter-spacing: -0.01em; }
+.subtext.center { margin: 24px auto 0; }
+
+.tag { 
+  display: inline-block; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--green); text-transform: uppercase; letter-spacing: 0.15em; 
+  border: 1px solid rgba(7, 221, 43, 0.2); padding: 8px 16px; border-radius: 100px; margin-bottom: 24px; background: rgba(7, 221, 43, 0.05); font-weight: 700;
+  box-shadow: 0 0 20px rgba(7, 221, 43, 0.1);
+}
+.cta-pre-text { font-family: 'Sora', sans-serif; font-size: 1.1rem; color: #fff; font-weight: 600; margin-bottom: 20px; }
+
+.actions { margin-top: 48px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.actions.left { justify-content: flex-start; }
+
+/* Botões Premium Framer */
+.btn { 
+  font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; 
+  padding: 18px 36px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
+  border: 1px solid rgba(255,255,255,0.1); color: #fff; background: rgba(255,255,255,0.03); border-radius: 100px; backdrop-filter: blur(10px);
+}
+.btn.primary { background: #fff; color: #000; border: none; box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+.btn:hover { background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+.btn.primary:hover { background: var(--green); color: #000; box-shadow: 0 8px 30px rgba(7, 221, 43, 0.4); }
+
+/* =========================================
+   4. SMART HEADER (Glassmorphism)
+========================================= */
+.header { position: fixed; top: 32px; left: 50%; transform: translateX(-50%); z-index: 100; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); width: 90%; max-width: 1000px; display: flex; justify-content: center;}
+.header.header-hidden { transform: translate(-50%, -150%); }
+
+.nav-pill { display: flex; align-items: center; gap: 32px; padding: 12px 16px 12px 32px; border-radius: 999px; background: rgba(10, 12, 16, 0.6); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+.logo-link { display: flex; align-items: center; margin-right: 16px; }
+.logo-header { height: 32px; width: auto; transition: transform 0.3s ease; }
+.logo-link:hover .logo-header { transform: scale(1.05); }
+
+.nav-pill a:not(.logo-link) { text-decoration: none; color: var(--text-muted); font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; transition: color 0.2s; }
+.nav-pill a:hover:not(.logo-link) { color: #fff; }
+.nav-cta { background: var(--text-main) !important; color: var(--bg-base) !important; padding: 12px 24px; border-radius: 999px; font-weight: 700 !important; }
+.nav-cta:hover { background: var(--green) !important; box-shadow: 0 0 20px rgba(7, 221, 43, 0.3); }
+
+@media (max-width: 768px) { .nav-pill a:not(.nav-cta):not(.logo-link) { display: none; } .nav-pill { gap: 16px; padding: 8px 12px 8px 24px; } }
+
+/* =========================================
+   NOVO HERO: AGÊNCIA TÉCNICA PREMIUM
+========================================= */
+
+/* Fundo: Gradiente profundo verde escuro com transição suave (menos glow) */
+.skin-hero::before {
+  background: 
+    radial-gradient(1000px circle at 30% 40%, rgba(7, 221, 43, 0.04), transparent 65%),
+    radial-gradient(800px circle at 80% 60%, rgba(2, 5, 3, 0.8), transparent 70%),
+    linear-gradient(180deg, #020302 0%, #030504 100%);
+  opacity: 1;
+}
+.skin-hero::after {
+  background: radial-gradient(1200px circle at 50% 100%, rgba(7, 221, 43, 0.03), transparent 60%);
+  opacity: 0.8;
+}
+
+/* Layout: Mais respiro lateral, menos densidade no texto */
+.hero-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; padding-top: 80px; }
+.hero-container { position: relative; z-index: 2; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 80px; }
+.hero-content { flex: 1; max-width: 680px; }
+
+/* Tipografia: Reduzida ~20%, peso menor, hierarquia clara */
+.hero-title { 
+  font-family: 'Sora', sans-serif; 
+  font-size: clamp(2.4rem, 4.5vw, 4.5rem); 
+  font-weight: 600; 
+  line-height: 1.18; 
+  letter-spacing: -0.03em; 
+  margin: 0 0 24px 0; 
+  color: var(--text-main);
+}
+.hero-subheadline { 
+  font-family: 'Inter', sans-serif; 
+  font-size: clamp(1.05rem, 1.2vw, 1.15rem); 
+  color: var(--text-muted); 
+  max-width: 560px; 
+  line-height: 1.7; 
+  font-weight: 400; 
+  margin-bottom: 48px; 
+}
+
+/* Botões Institucionais Premium */
+.hero-actions { display: flex; gap: 16px; justify-content: flex-start; flex-wrap: wrap; }
+.btn-hero { 
+  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; text-decoration: none; 
+  padding: 16px 32px; display: inline-flex; align-items: center; justify-content: center; 
+  transition: all 0.3s ease; border-radius: 6px; letter-spacing: 0.05em;
+}
+.btn-solid { background: #EAEAEA; color: #050505; border: 1px solid #EAEAEA; }
+.btn-solid:hover { background: #FFFFFF; transform: translateY(-2px); }
+.btn-outline { background: transparent; color: var(--text-main); border: 1px solid rgba(255, 255, 255, 0.15); }
+.btn-outline:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
+
+/* Elemento 3D: Menor (-15%), técnico, sem glow exagerado */
+.core-3d-wrapper { position: relative; width: 340px; height: 340px; flex-shrink: 0; }
+.core-3d-blur {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 260px; height: 260px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(7, 221, 43, 0.02) 0%, transparent 60%);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  z-index: 0;
+}
+.gyro { width: 100%; height: 100%; transform-style: preserve-3d; animation: gyro-spin 35s linear infinite; position: relative; z-index: 1;}
+.ring { position: absolute; top: 50%; left: 50%; border-radius: 50%; border: 1px solid rgba(255,255,255,0.06); }
+.ring-1 { width: 100%; height: 100%; transform: translate(-50%, -50%) rotateX(60deg); animation: r1 18s linear infinite reverse; }
+.ring-2 { width: 75%; height: 75%; transform: translate(-50%, -50%) rotateY(60deg); animation: r2 24s linear infinite; border: 1px dashed rgba(255,255,255,0.1); }
+.ring-3 { width: 50%; height: 50%; transform: translate(-50%, -50%) rotateZ(45deg); animation: r1 14s linear infinite; border: 1px solid rgba(7, 221, 43, 0.15); }
+.center-node { 
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+  width: 14px; height: 14px; background: var(--green); border-radius: 50%; 
+  /* Reduzido brilho externo, adicionada sombra interna para parecer peça mecânica */
+  box-shadow: 0 0 15px rgba(7, 221, 43, 0.2), inset 0 0 8px rgba(0,0,0,0.6); 
+}
+
+@keyframes gyro-spin { to { transform: rotateY(360deg) rotateX(45deg); } }
+@keyframes r1 { to { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(360deg); } }
+@keyframes r2 { to { transform: translate(-50%, -50%) rotateY(60deg) rotateX(360deg); } }
+
+@media (max-width: 1024px) { 
+  .hero-container { flex-direction: column; text-align: left; gap: 50px; } 
+  .hero-content { align-items: flex-start; display: flex; flex-direction: column; }
+  .core-3d-wrapper { width: 280px; height: 280px; align-self: center; margin-top: 20px;} 
+}
+/* =========================================
+   6. SEÇÃO DE MÉTODO (Surface Contrast & Glass Cards)
+========================================= */
+.surface-section {
+  background-color: var(--bg-surface);
+  border-top: 1px solid rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+
+  /* Full-bleed real (não herdar max-width/padding do selector `section`) */
+  width: 100vw;
+  max-width: none;
+  margin: 0;
+  margin-left: calc(-50vw + 50%);
+  padding: 140px 0;
+
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+/* A linha verde de brilho no topo da seção (Framer style) */
+.surface-section::before {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 40%; height: 1px; background: linear-gradient(90deg, transparent, var(--green), transparent);
+  box-shadow: 0 0 30px 2px var(--green-glow); opacity: 0.6;
+}
+
+.surface-content { width: 100%; max-width: 1300px; padding: 0 5%; margin: 0 auto; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2;}
+
+/* MODIFICAÇÃO: Ajustado para os cards ficarem mais GORDOS, passando a usar 2 colunas largas em telas grandes em vez de 4 apertadas */
+.galilee-grid { display: grid; grid-template-columns: 1fr; gap: 32px; margin-top: 80px; width: 100%; align-items: stretch; }
+@media (min-width: 720px) {
+  /* Mantém 2 colunas largas em telas grandes para os cards ficarem "gordos" */
+  .galilee-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1100px) {
+  /* Desktop: 2 cards por linha (Ficam mais gordinhos e com respiro melhor) */
+  .galilee-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+}
+
+/* O CARD DE VIDRO DEFINITIVO */
+.galilee-card {
+  background: linear-gradient(180deg, rgba(25, 28, 33, 0.4) 0%, rgba(12, 14, 18, 0.6) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 24px 40px -8px rgba(0, 0, 0, 0.8);
+  border-radius: 24px; padding: 40px 32px;
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  display: flex; flex-direction: column; position: relative; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow: hidden;
+}
+
+.galilee-card:hover {
+  transform: translateY(-8px); border-color: rgba(7, 221, 43, 0.3);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 24px 40px -8px rgba(0, 0, 0, 0.9), 0 0 40px -10px rgba(7, 221, 43, 0.15);
+}
+
+/* MODIFICAÇÃO: Altura do desenho visual reduzida para o card não ficar tão esticado verticalmente */
+.galilee-visual {
+  width: 100%; height: 90px; min-height: 90px; /* Altura reduzida */
+  flex-shrink: 0; background: rgba(0, 0, 0, 0.3); border-radius: 12px; 
+  border: 1px solid rgba(255, 255, 255, 0.03); box-shadow: inset 0 2px 10px rgba(0,0,0,0.5); 
+  display: flex; flex-direction: column; justify-content: center; padding: 20px; gap: 12px; margin-bottom: 24px;
+}
+.g-line { height: 4px; background: rgba(255, 255, 255, 0.15); border-radius: 99px; }
+.g-box { height: 32px; background: rgba(255, 255, 255, 0.08); border-radius: 6px; width: 100%; }
+
+.galilee-text { display: flex; flex-direction: column; flex-grow: 1; text-align: left;}
+.galilee-text h3 { font-family: 'Sora', sans-serif; font-size: 1.25rem; font-weight: 700; margin: 0 0 12px 0; color: #fff; line-height: 1.3; letter-spacing: -0.01em; }
+.galilee-text p { color: var(--text-muted); margin: 0; font-size: 0.95rem; line-height: 1.6; }
+
+/* =========================================
+   7. SERVIÇOS (Innoflow: 2 col, seção 100vh)
+========================================= */
+#servicos {
+  /* Override do `section { ... }` global */
+  width: 100vw;
+  max-width: none;
+  margin: 0;
+  margin-left: calc(-50vw + 50%);
+
+  /* 1 tela */
+  height: 100vh;
+
+  /* Espaçamento menor (antes ficava “gigante”) */
+  padding: clamp(24px, 4vh, 56px) clamp(18px, 4vw, 80px);
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+}
+
+.services-outer {
+  width: 100%;
+  max-width: 1300px;
+  height: 100%;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-rows: auto 1fr;
+  row-gap: clamp(16px, 3vh, 32px);
+}
+
+.services-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: rgba(0,0,0,0.45);
+  display: block;
+  margin: 0;
+}
+
+.services-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  width: 100%;
+  height: 100%;
+
+  /* Foto centralizada em relação ao bloco de títulos */
+  align-items: center;
+}
+@media (min-width: 900px) {
+  .services-container {
+    grid-template-columns: clamp(320px, 30vw, 420px) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 88px);
+  }
+}
+
+.services-img-col {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.services-img-wrapper {
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #e8e8e8;
+  box-shadow: 0 24px 48px -12px rgba(0,0,0,0.18);
+  display: block;
+}
+.services-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.35s ease;
+}
+.services-list { list-style: none; padding: 0; margin: 0; }
+.service-item {
+  font-family: 'Sora', sans-serif; font-size: clamp(2rem, 4vw, 4.5rem); font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.05;
+  cursor: pointer;
+  transition: color 0.4s ease; letter-spacing: -0.03em;
+  padding: 24px 0; display: block; color: rgba(0,0,0,0.14);
+  transform: translateX(0);
+  transition: color 0.4s ease, transform 0.4s ease;
+}
+.service-item:hover, .service-item.active {
+  color: #0b0c0e;
+  transform: translateX(28px);
+}
+.service-desc {
+  margin: 12px 0 0 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  letter-spacing: normal;
+  text-transform: none;
+  color: rgba(0,0,0,0.56);
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.35s ease;
+}
+.service-item:hover .service-desc,
+.service-item.active .service-desc {
+  max-height: 90px;
+  opacity: 1;
+}
+
+/* =========================================
+   8. PROJETOS (CARROSSEL 3D HORIZONTAL)
+========================================= */
+.carousel-container { display: flex; align-items: center; justify-content: center; width: 100vw; margin-left: calc(-50vw + 50%); height: 850px; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
+.carousel { --c-trans-dur: 400ms; --c-item-w: 54rem; --c-item-h: 31rem; --c-hover-scale: 1.05; --c-diameter: 120rem; --c-radius: calc(var(--c-diameter) / 2); --c-anim-dur: 45s; perspective: 2500px; perspective-origin: 50% 30%; width: var(--c-diameter); height: var(--c-diameter); position: relative; }
+@media only screen and (max-width: 1440px) { .carousel-container { height: 700px; } .carousel { --c-item-w: 48rem; --c-item-h: 27rem; --c-diameter: 100rem; perspective: 2000px; } }
+@media only screen and (max-width: 1024px) { .carousel-container { height: 550px; } .carousel { --c-item-w: 36rem; --c-item-h: 20rem; --c-diameter: 80rem; perspective: 1500px; } }
+@media only screen and (max-width: 768px) { .carousel-container { height: 400px; } .carousel { --c-item-w: 24rem; --c-item-h: 14rem; --c-diameter: 50rem; perspective: 1000px; } }
+
+.carousel-rotation-direction { --z: calc(var(--c-radius) * -1); transform: translateZ(var(--z)); transform-style: preserve-3d; position: absolute; inset: 0; }
+.carousel-item-wrapper { transform-style: inherit; width: inherit; height: inherit; list-style-type: none; position: relative; margin: 0; padding: 0; animation: carousel-spin var(--c-anim-dur) linear infinite; }
+@keyframes carousel-spin { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
+.carousel-item-wrapper:has(.carousel-item:hover) { animation-play-state: paused; }
+
+.carousel-item { --rotation: calc(360 / var(--_num-elements) * var(--_index) * 1deg); left: calc(var(--c-radius) - var(--c-item-w) / 2); top: calc(var(--c-radius) - var(--c-item-h) / 2); transform: rotateY(var(--rotation)) translateZ(var(--c-radius)); transform-style: inherit; width: var(--c-item-w); height: var(--c-item-h); transition: all var(--c-trans-dur); position: absolute; border-radius: 24px; }
+.carousel-item:hover { transform: rotateY(var(--rotation)) translateZ(calc(var(--c-radius) * var(--c-hover-scale))); }
+
+.carousel-card-inner { 
+  display: flex; flex-direction: column; justify-content: space-between; width: 100%; height: 100%; 
+  background: linear-gradient(180deg, rgba(25, 28, 33, 0.7) 0%, rgba(12, 14, 18, 0.9) 100%);
+  border-radius: 24px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08); 
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 24px 48px -12px rgba(0, 0, 0, 0.9);
+  position: relative; text-decoration: none; padding: 56px; box-sizing: border-box; transition: all var(--c-trans-dur); filter: brightness(0.6); 
+}
+.carousel-item:hover .carousel-card-inner { filter: brightness(1); border-color: rgba(7, 221, 43, 0.4); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 0 40px rgba(7, 221, 43, 0.15); }
+
+.case-video-3d { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.video-overlay-3d { position: absolute; inset: 0; background: linear-gradient(to top, rgba(4,5,7,0.95) 0%, rgba(4,5,7,0.4) 50%, rgba(4,5,7,0.8) 100%); z-index: 1; }
+
+.case-metrics { position: relative; z-index: 2; display: flex; gap: 32px; }
+.metric-label { display:block; font-family: 'Space Mono', monospace; font-size:10px; color:var(--text-muted); text-transform:uppercase; font-weight:700; letter-spacing:1px; }
+.metric-value { font-family: 'Sora', sans-serif; font-size:1.3rem; font-weight:700; color:#fff; }
+.metric-value.accent-color { color: var(--green); }
+
+.case-content { position: relative; z-index: 2; text-align: left;}
+.case-tag { font-family: 'Space Mono', monospace; background:#fff; color:#000; padding:6px 14px; font-size:10px; font-weight:700; border-radius:100px; display:inline-block; margin-bottom:16px; text-transform:uppercase; letter-spacing: 1px;}
+.case-title { font-family: 'Sora', sans-serif; font-size:clamp(2rem, 3.5vw, 3.5rem); font-weight:700; color:#fff; margin:0; line-height:1; letter-spacing:-0.03em; text-transform: uppercase;}
+.case-desc { color:var(--text-muted); margin:12px 0 0 0; font-size:1.05rem; line-height:1.6; max-width:85%; }
+
+/* =========================================
+   9. DEPOIMENTOS (Centralizado e sem corte)
+========================================= */
+/* MODIFICAÇÃO: Removido scroll-x auto para que os cards quebrem a linha (wrap) e fiquem centralizados. Ninguém será cortado. */
+.video-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 32px; margin-top: 64px; padding-bottom: 40px; }
+.video-card { 
+  position: relative; width: 320px; height: 520px; border-radius: 24px; 
+  background: var(--bg-surface); border: 1px solid rgba(255, 255, 255, 0.05); 
+  box-shadow: none;
+  overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s ease; background-size: cover; background-position: center; 
+}
+@media(min-width: 1024px) { .video-card { width: 340px; height: 560px; } }
+.video-card:hover { transform: translateY(-8px); border-color: rgba(7, 221, 43, 0.4); box-shadow: none; }
+.video-card::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.4); transition: background 0.4s; }
+.video-card:hover::before { background: rgba(0,0,0,0.1); }
+
+.play-btn { width: 80px; height: 80px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s; z-index: 2; }
+.play-btn::after { content: ''; width: 0; height: 0; border-style: solid; border-width: 12px 0 12px 20px; border-color: transparent transparent transparent #fff; margin-left: 6px; }
+.video-card:hover .play-btn { background: var(--green); border-color: var(--green); transform: scale(1.1); box-shadow: 0 10px 30px var(--green-glow); }
+.video-card:hover .play-btn::after { border-color: transparent transparent transparent #000; }
+
+.video-info { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; padding: 60px 24px 32px; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%); text-align: left;}
+.video-info h4 { font-family: 'Sora', sans-serif; margin: 0; font-size: 1.25rem; font-weight: 700; color: #fff; letter-spacing: -0.01em;}
+.video-info p { margin: 8px 0 0 0; font-size: 0.95rem; color: var(--text-muted); line-height: 1.5;}
+
+/* =========================================
+   10. FAQ & FOOTER (Colados para evitar fundo vazado)
+========================================= */
+#faq {
+  width: 100vw;
+  max-width: none;
+  margin: 0;
+  margin-left: calc(-50vw + 50%);
+  padding: 120px 0;
+}
+
+.faq-wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 clamp(24px, 4vw, 80px);
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .faq-wrapper {
+    grid-template-columns: clamp(380px, 42vw, 680px) minmax(0, 1fr);
+    gap: clamp(40px, 6vw, 120px);
+  }
+}
+
+.faq-left-col { justify-self: start; transform: translateX(0); }
+
+.faq-header-title {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(2.8rem, 5.5vw, 6rem);
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+  margin: 0;
+  text-transform: uppercase;
+  color: #0b0c0e;
+  max-width: 100%;
+}
+.faq-list { width: 100%; display: flex; flex-direction: column; }
+.faq-item { border-bottom: 1px solid rgba(0, 0, 0, 0.10); }
+.faq-item:first-child { border-top: 1px solid rgba(0, 0, 0, 0.10); }
+
+.faq-question {
+  width: 100%; text-align: left; background: transparent; border: none;
+  padding: 32px 0; font-family: 'Sora', sans-serif; font-size: 1.2rem; font-weight: 700;
+  color: #0b0c0e; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+  transition: color 0.3s ease; line-height: 1.3; letter-spacing: -0.01em;
+}
+.faq-question:hover { color: rgba(0,0,0,0.6); }
+.faq-item.faq-open .faq-question { color: #0b0c0e; }
+
+.faq-icon {
+  width: 20px; height: 20px; position: relative; flex-shrink: 0; margin-left: 24px;
+  transition: transform 0.3s ease;
+}
+.faq-icon::before,
+.faq-icon::after {
+  content: ''; position: absolute; top: 50%; left: 50%;
+  background: currentColor; transition: transform 0.3s ease;
+}
+.faq-icon::before { width: 100%; height: 2px; transform: translate(-50%, -50%); }
+.faq-icon::after { width: 2px; height: 100%; transform: translate(-50%, -50%); }
+.faq-item.faq-open .faq-icon::after { transform: translate(-50%, -50%) rotate(90deg); opacity: 0; }
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  will-change: max-height;
+  transition: max-height 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  color: rgba(0,0,0,0.62);
+  line-height: 1.7;
+  text-align: left;
+}
+.faq-answer-inner {
+  padding-bottom: 32px;
+  font-size: 1rem;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 200ms ease, transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.faq-item.faq-open .faq-answer-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.theme-light .faq-question { color: #0b0c0e; }
+.theme-light .faq-question:hover { color: rgba(0,0,0,0.6); }
+.theme-light .faq-answer { color: rgba(0,0,0,0.62); }
+.theme-light .faq-item { border-color: rgba(0,0,0,0.10); }
+
+/* MODIFICAÇÃO: margin-top: 0 para o footer não deixar buraco com o FAQ. O padding do FAQ faz o respiro. */
+.footer { position: relative; padding: 120px 5% 60px; margin-top: 0; background: #020202; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; isolation: isolate; }
+.footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(900px circle at 20% 20%, rgba(7, 221, 43, 0.10), transparent 60%),
+    radial-gradient(900px circle at 80% 60%, rgba(255, 255, 255, 0.04), transparent 60%),
+    linear-gradient(180deg, rgba(2,2,2,0.2), rgba(2,2,2,1) 100%);
+  opacity: 0.9;
+}
+.footer > * { position: relative; z-index: 1; }
+.footer-cta { text-align: center; margin-bottom: 120px; position: relative; z-index: 2; }
+.footer-content { width: 100%; max-width: 1300px; display: grid; grid-template-columns: 1fr; gap: 64px; position: relative; z-index: 2; }
+@media(min-width: 900px){ .footer-content { grid-template-columns: 2fr 1fr 1fr 1fr; } }
+.logo-footer { height: 90px; width: auto; display: block; margin-bottom: 24px; }
+.footer-brand p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; max-width: 320px; margin: 0; }
+.footer-col h4 { font-family: 'Space Mono', monospace; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--green); margin: 0 0 32px 0; font-weight: 700; }
+.footer-col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 16px; }
+.footer-col a { color: var(--text-muted); text-decoration: none; font-size: 0.95rem; transition: color 0.2s; }
+.footer-col a:hover { color: #fff; } 
+.bgword { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); font-family: 'Sora', sans-serif; font-size: clamp(40px, 11vw, 150px); font-weight: 800; letter-spacing: -0.02em; color: rgba(255, 255, 255, 0.02); pointer-events: none; white-space: nowrap; z-index: 0; -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 100%); mask-image: linear-gradient(to bottom, black 20%, transparent 100%); }
+
+/* UTILITÁRIOS */
+.reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal.active { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+
+<body>
+
+<div class="ambient-lighting"></div>
+<div class="tech-grid"></div>
+
+<header class="header">
+  <div class="nav-pill">
+    <a href="#" class="logo-link">
+      <img src="Logo Branca.png" alt="Truth Commerce" class="logo-header">
+    </a>
+    <a href="#metodo">Metodologia</a>
+    <a href="#projetos">Infraestrutura Ativa</a>
+    <a href="#faq">Perguntas Frequentes</a>
+    <a href="https://wa.me/SEUNUMEROAQUI" target="_blank" class="nav-cta">Avaliar Estrutura</a>
+  </div>
+</header>
+
+<section class="hero-wrapper section-skin skin-hero">
+  <div class="hero-container">
+    
+    <div class="hero-content reveal">
+      <div class="tag">System Status: Go</div>
+      <h1 class="hero-title">Infraestrutura sólida para operações digitais que exigem <span class="accent">escala.</span></h1>
+      <p class="hero-subheadline">Arquitetura técnica, padronização de catálogo e integração sistêmica para negócios que precisam operar com estabilidade.</p>
+      
+      <div class="hero-actions">
+        <a href="#metodo" class="btn-hero btn-solid">Conhecer a estrutura</a>
+        <a href="https://wa.me/SEUNUMEROAQUI" target="_blank" class="btn-hero btn-outline">Falar com especialista</a>
+      </div>
+    </div>
+
+    <div class="core-3d-wrapper reveal" style="transition-delay: 0.2s;">
+      <div class="core-3d-blur"></div>
+      <div class="gyro">
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"></div>
+        <div class="ring ring-3"></div>
+        <div class="center-node"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="text-left section-skin skin-alert theme-light" style="max-width: 1000px; margin: 0 auto; padding-top: 40px; padding-bottom: 80px;">
+  <span class="tag reveal">[ ALERTA CRÍTICO ]</span>
+  <h2 class="title-medium reveal">Escalar sem estrutura é <span class="accent">risco de colapso.</span></h2>
+  <p class="subtext reveal">
+    Tentar vender no digital sem uma base técnica sólida é o atalho para ruptura de estoque, devoluções e margens destruídas. Seja na transição do físico para o online ou na profissionalização do que você já vende: antes de investir em tráfego, você precisa de infraestrutura. Nós estabilizamos a operação.
+  </p>
+</section>
+
+<section id="metodo" class="surface-section section-skin skin-metodo">
+  <div class="surface-content">
+    <div class="text-center reveal">
+      <span class="tag">Engenharia Operacional</span>
+      <h2 class="title-medium">O processo não é improviso.<br>É arquitetura de negócios.</h2>
+    </div>
+    
+    <div class="galilee-grid">
+      <div class="galilee-card reveal">
+        <div class="galilee-visual">
+          <div class="g-line" style="width: 40%; background: var(--green);"></div>
+          <div class="g-line" style="width: 100%;"></div>
+          <div class="g-line" style="width: 80%;"></div>
+        </div>
+        <div class="galilee-text">
+          <h3>01. Diagnóstico Estrutural</h3>
+          <p>Mapeamos o seu cenário. Seja uma empresa tradicional dando o primeiro passo online ou um e-commerce precisando de ordem. Entendemos seus sistemas internos e processos para desenhar a arquitetura ideal.</p>
+        </div>
+      </div>
+      
+      <div class="galilee-card reveal" style="transition-delay: 0.1s;">
+        <div class="galilee-visual">
+          <div class="g-box"></div>
+          <div class="g-line" style="width: 60%;"></div>
+          <div class="g-line" style="width: 40%;"></div>
+        </div>
+        <div class="galilee-text">
+          <h3>02. Arquitetura de Catálogo</h3>
+          <p>A base de uma conversão previsível. Criamos do zero ou reestruturamos seus produtos: padronizamos descrições, tratamos ativos visuais e organizamos a taxonomia técnica para alta performance.</p>
+        </div>
+      </div>
+      
+      <div class="galilee-card reveal" style="transition-delay: 0.2s;">
+        <div class="galilee-visual" style="align-items: center; gap: 8px;">
+          <div class="g-line" style="width: 100%;"></div>
+          <div style="display: flex; gap: 8px; width: 100%;">
+            <div class="g-box" style="flex: 1;"></div>
+            <div class="g-box" style="flex: 1;"></div>
+          </div>
+        </div>
+        <div class="galilee-text">
+          <h3>03. Integração Sistêmica</h3>
+          <p>Conectamos sua operação de ponta a ponta. Plugamos o seu ERP/PDV às plataformas e canais de venda, garantindo que estoque, preços e logística conversem em tempo real, sem falhas.</p>
+        </div>
+      </div>
+
+      <div class="galilee-card reveal" style="transition-delay: 0.3s;">
+        <div class="galilee-visual" style="justify-content: space-around;">
+          <div class="g-line" style="width: 30px; height: 30px; border-radius: 50%;"></div>
+          <div class="g-line" style="width: 90%;"></div>
+          <div class="g-line" style="width: 60%;"></div>
+        </div>
+        <div class="galilee-text">
+          <h3>04. Handover e Autonomia</h3>
+          <p>Entregamos a máquina pronta e a tripulação treinada. Fornecemos documentação e suporte ativo para que sua empresa assuma o controle da nova operação com total segurança.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center reveal" style="margin-top: 80px;">
+      <p class="cta-pre-text">Pronto para estabilizar seus sistemas?</p>
+      <a href="https://wa.me/SEUNUMEROAQUI" target="_blank" class="btn primary">Ver estrutura completa</a>
+    </div>
+  </div>
+</section>
+
+<section id="servicos" class="section-skin skin-services theme-light">
+  <div class="services-outer reveal">
+    <span class="services-label">NOSSOS PILARES</span>
+    <div class="services-container">
+      <div class="services-img-col">
+        <div class="services-img-wrapper">
+          <img id="service-img" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop" alt="Serviço Ativo">
+        </div>
+      </div>
+      <ul class="services-list">
+        <li class="service-item active" data-img="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop">
+          Infraestrutura Marketplaces
+        </li>
+        <li class="service-item" data-img="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop">
+          Arquitetura de E-commerce
+        </li>
+        <li class="service-item" data-img="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=800&auto=format&fit=crop">
+          Identidade & Posicionamento
+        </li>
+        <li class="service-item" data-img="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop">
+          Capacitação Operacional
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="projetos" class="section-skin skin-projects">
+  <div class="text-center reveal">
+    <span class="tag">Infraestrutura Ativa</span>
+    <h2 class="title-medium">Operações Estruturadas.</h2>
+  </div>
+
+  <div class="carousel-container reveal">
+    <div class="carousel">
+      <div class="carousel-rotation-direction">
+        <ul class="carousel-item-wrapper" style="--_num-elements: 4">
+
+          <li class="carousel-item" style="--_index: 1;">
+            <a href="https://www.sopy.com.br/" target="_blank" class="carousel-card-inner">
+              <video loop muted playsinline class="case-video-3d" src="sopy.mp4" poster="sopy-print.png"></video>
+              <div class="video-overlay-3d"></div>
+              
+              <div class="case-metrics">
+                <div><span class="metric-label">Plataforma</span><span class="metric-value">Nuvemshop</span></div>
+                <div><span class="metric-label">Personalização</span><span class="metric-value accent-color">100%</span></div>
+              </div>
+
+              <div class="case-content">
+                <div class="case-tag">E-commerce D2C</div>
+                <h3 class="case-title">Sopy</h3>
+                <p class="case-desc">Estruturação com arquitetura 100% customizada e catálogo padronizado para alta conversão.</p>
+              </div>
+            </a>
+          </li>
+
+          <li class="carousel-item" style="--_index: 2;">
+            <a href="https://mpdistribuidorars.com.br/" target="_blank" class="carousel-card-inner">
+              <video loop muted playsinline class="case-video-3d" src="mp.mp4" poster="mp-print.png"></video>
+              <div class="video-overlay-3d"></div>
+              
+              <div class="case-metrics">
+                <div><span class="metric-label">Plataforma</span><span class="metric-value">Shopify</span></div>
+                <div><span class="metric-label">Carga de Dados</span><span class="metric-value accent-color">Alta Densidade</span></div>
+              </div>
+
+              <div class="case-content">
+                <div class="case-tag">Operação B2B/B2C</div>
+                <h3 class="case-title">MP Distribuidora</h3>
+                <p class="case-desc">E-commerce robusto projetado para suportar alto volume operacional e catálogo complexo.</p>
+              </div>
+            </a>
+          </li>
+
+          <li class="carousel-item" style="--_index: 3;">
+            <a href="https://nexteventosbrasil.com/" target="_blank" class="carousel-card-inner">
+              <video loop muted playsinline class="case-video-3d" src="next.mp4" poster="next-print.png"></video>
+              <div class="video-overlay-3d"></div>
+              
+              <div class="case-metrics">
+                <div><span class="metric-label">Estrutura</span><span class="metric-value">Código Nativo</span></div>
+                <div><span class="metric-label">Escalabilidade</span><span class="metric-value accent-color">Máxima</span></div>
+              </div>
+
+              <div class="case-content">
+                <div class="case-tag">Plataforma Custom</div>
+                <h3 class="case-title">Next Eventos</h3>
+                <p class="case-desc">Ecossistema próprio construído para suportar fluxos complexos e inscrições sob medida.</p>
+              </div>
+            </a>
+          </li>
+
+          <li class="carousel-item" style="--_index: 4;">
+            <a href="https://johnnycooker.com.br/" target="_blank" class="carousel-card-inner">
+              <video loop muted playsinline class="case-video-3d" src="johny.mp4" poster="johny-print.png"></video>
+              <div class="video-overlay-3d"></div>
+              
+              <div class="case-metrics">
+                <div><span class="metric-label">Missão</span><span class="metric-value">Setup Base</span></div>
+                <div><span class="metric-label">Integração</span><span class="metric-value accent-color">Completa</span></div>
+              </div>
+
+              <div class="case-content">
+                <div class="case-tag">Setup Operacional</div>
+                <h3 class="case-title">Johnny Cooker</h3>
+                <p class="case-desc">Implantação e organização da loja virtual para a marca operar no digital com o pé direito.</p>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center reveal" style="margin-top: 32px;">
+    <p class="cta-pre-text">Sua operação pode ser a próxima a escalar.</p>
+    <a href="https://wa.me/SEUNUMEROAQUI" target="_blank" class="btn primary">Conhecer abordagem</a>
+  </div>
+</section>
+
+<section id="depoimentos" class="text-center section-skin skin-testimonials theme-light" style="padding-bottom: 120px;">
+  <span class="tag reveal">Depoimentos</span>
+  <h2 class="title-medium reveal">A palavra final.</h2>
+  
+  <div class="video-grid reveal">
+    <div class="video-card" style="background-image: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1000&auto=format&fit=crop');">
+      <div class="play-btn"></div>
+      <div class="video-info">
+        <h4>CEO, Loja de Moda</h4>
+        <p>Estoque e envios finalmente organizados.</p>
+      </div>
+    </div>
+    
+    <div class="video-card" style="background-image: url('https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?q=80&w=1000&auto=format&fit=crop');">
+      <div class="play-btn"></div>
+      <div class="video-info">
+        <h4>Diretor, Distribuidora</h4>
+        <p>Integração de sistemas sem dores de cabeça.</p>
+      </div>
+    </div>
+    
+    <div class="video-card" style="background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1000&auto=format&fit=crop');">
+      <div class="play-btn"></div>
+      <div class="video-info">
+        <h4>Founder, Marca de Casa</h4>
+        <p>Anúncios padronizados que realmente convertem.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="faq" class="section-skin skin-faq theme-light">
+  <div class="faq-wrapper reveal">
+    <div class="faq-left-col">
+      <h2 class="faq-header-title">PERGUNTAS FREQUENTES</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question">1. A Truth atende quem está começando agora? <span class="faq-icon"></span></button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Sim. Inclusive, começar com a infraestrutura correta evita refações caríssimas no futuro. Nós estruturamos sua entrada no digital, desde a escolha do sistema e parametrização do ERP até a taxonomia do primeiro produto.</div>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <button class="faq-question">2. E quem já vende online, mas está desorganizado?<span class="faq-icon"></span></button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Esse é o nosso core business. Se o seu estoque fura, o ERP não conversa com a loja, ou seus anúncios estão bagunçados, nós entramos com governança para integrar e arrumar todo o seu ecossistema.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">3. Vocês também criam o e-commerce próprio? <span class="faq-icon"></span></button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Sim! Além da presença forte nos marketplaces, desenhamos e implementamos a arquitetura completa de lojas virtuais próprias (D2C ou B2B), deixando a operação centralizada em um só lugar.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">4. Vocês fazem a gestão de tráfego (Ads)?<span class="faq-icon"></span></button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Não. Nós somos a etapa obrigatória antes do tráfego. Construímos a vitrine técnica perfeita e o sistema logístico impecável. Quando a máquina estiver sólida, você poderá investir em marketing com a certeza de que suportará o volume.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">5. O que é entregue no final do projeto? <span class="faq-icon"></span></button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Uma operação digital blindada e conectada. Seu ecossistema 100% integrado, catálogo padronizado segundo as regras de cada canal, fluxos automatizados e sua equipe treinada para operar a estrutura..</div>
+        </div>
+      </div>
+
+      
+    </div>
+  </div>
+</section>
+
+<footer id="footer" class="footer">
+  <div class="footer-cta reveal">
+    <h2 class="title-medium">Sua empresa tem a base certa para <span class="accent">decolar?</span></h2>
+    <p class="subtext center" style="margin-bottom: 40px;">Seja para dar o primeiro passo na internet ou organizar uma operação que já roda. Pare de perder vendas por desorganização técnica.</p>
+    <a href="https://wa.me/SEUNUMEROAQUI" target="_blank" class="btn primary" style="padding: 22px 48px; font-size: 14px;">Iniciar Diagnóstico</a>
+  </div>
+
+  <div class="footer-content reveal">
+    <div class="footer-brand">
+      <img src="Logo Branca.png" alt="Truth Commerce" class="logo-footer">
+      <p>A infraestrutura técnica por trás das marcas que escalam com segurança, sem quebrar a operação no meio do caminho.</p>
+      <p style="margin-top: 24px; font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--text-muted);">© 2026 Truth Commerce.</p>
+    </div>
+    <div class="footer-col">
+      <h4>/ Sistemas</h4>
+      <ul>
+        <li><a href="#">Setup E-commerce</a></li>
+        <li><a href="#">Expansão Marketplaces</a></li>
+        <li><a href="#">Integração ERP/PDV</a></li>
+        <li><a href="#">PIM (Catálogo)</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>/ A Empresa</h4>
+      <ul>
+        <li><a href="#metodo">Protocolo</a></li>
+        <li><a href="#projetos">Infraestrutura Ativa</a></li>
+        <li><a href="#faq">Dados Técnicos</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>/ Conexão</h4>
+      <ul>
+        <li><a href="#">WhatsApp</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bgword">Truth Commerce</div>
+</footer>
+
+<script>
+/* SCROLL REVEAL */
+function reveal() {
+  var reveals = document.querySelectorAll(".reveal");
+  for (var i = 0; i < reveals.length; i++) {
+    var windowHeight = window.innerHeight;
+    var elementTop = reveals[i].getBoundingClientRect().top;
+    if (elementTop < windowHeight - 100) { reveals[i].classList.add("active"); }
+  }
+}
+window.addEventListener("scroll", reveal); reveal();
+
+/* SERVIÇOS: hover troca imagem + ativa item */
+const serviceItems = document.querySelectorAll('.service-item');
+const serviceImg = document.getElementById('service-img');
+serviceItems.forEach(item => {
+  item.addEventListener('mouseenter', () => {
+    serviceItems.forEach(el => el.classList.remove('active'));
+    item.classList.add('active');
+    if (serviceImg) {
+      const newSrc = item.getAttribute('data-img');
+      if (newSrc) {
+        serviceImg.style.opacity = '0';
+        setTimeout(() => { serviceImg.src = newSrc; serviceImg.style.opacity = '1'; }, 200);
+      }
+    }
+  });
+  item.addEventListener('mouseleave', () => {
+    item.classList.remove('active');
+    serviceItems[0].classList.add('active');
+  });
+});
+
+/* LÓGICA DO FAQ (ACCORDION) */
+document.addEventListener('DOMContentLoaded', () => {
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(item => {
+    const button = item.querySelector('.faq-question');
+    const answer = item.querySelector('.faq-answer');
+    button.addEventListener('click', () => {
+      const isOpen = item.classList.contains('faq-open');
+      faqItems.forEach(otherItem => {
+        otherItem.classList.remove('faq-open');
+        otherItem.querySelector('.faq-answer').style.maxHeight = null;
+      });
+      if (!isOpen) {
+        item.classList.add('faq-open');
+        answer.style.maxHeight = answer.scrollHeight + "px";
+      }
+    });
+  });
+
+  /* LÓGICA DO VÍDEO DOS CASES 3D (Toca apenas no Hover) */
+  const carouselItems = document.querySelectorAll('.carousel-item');
+  carouselItems.forEach(item => {
+    const video = item.querySelector('.case-video-3d');
+    if(video) {
+      item.addEventListener('mouseenter', () => { video.play().catch(e => console.log("Auto-play bloqueado.")); });
+      item.addEventListener('mouseleave', () => { video.pause(); });
+    }
+  });
+});
+
+/* LÓGICA DO SMART HEADER */
+let lastScrollTop = 0;
+const mainHeader = document.querySelector('.header');
+window.addEventListener('scroll', () => {
+  let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  if (scrollTop > lastScrollTop && scrollTop > 100) { mainHeader.classList.add('header-hidden'); } 
+  else { mainHeader.classList.remove('header-hidden'); }
+  lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+});
+</script>
+
+</body>
+</html>
