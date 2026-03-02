@@ -8,22 +8,24 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
 <style>
 /* =========================================
    1. VARIÁVEIS - ESTÉTICA FRAMER PREMIUM
 ========================================= */
 :root {
-  --bg-base: #040507; /* Fundo base super profundo, quase preto, mas não #000 */
-  --bg-surface: #0a0c10; /* Fundo das seções de destaque */
-  
-  --green: #07dd2b; /* O SEU VERDE ORIGINAL DA MARCA */
-  --green-glow: rgba(7, 221, 43, 0.2);
-  
+  --bg-base: #040507;
+  --bg-surface: #0a0c10;
+  --green: #07dd2b;
+  --green-glow: rgba(7, 221, 43, 0.12); /* Reduzido — menos neon */
   --text-main: #FFFFFF;
-  --text-muted: #A1A1AA; /* Cinza prateado sofisticado */
-  
+  --text-muted: #A1A1AA;
   --border-light: rgba(255, 255, 255, 0.06);
+  /* Motion tokens */
+  --ease-snappy: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * { box-sizing: border-box; }
@@ -251,32 +253,32 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
   color: #000;
 }
 
-.title-huge { font-family: 'Sora', sans-serif; font-size: clamp(3rem, 6vw, 6rem); font-weight: 700; line-height: 1.05; letter-spacing: -0.04em; margin: 0; text-transform: uppercase; }
-.title-medium { font-family: 'Sora', sans-serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; margin: 0 0 24px 0; }
-.accent { color: var(--green); text-shadow: 0 0 30px rgba(7,221,43,0.3); }
+.title-huge { font-family: 'Sora', sans-serif; font-size: clamp(2.8rem, 5.5vw, 5.5rem); font-weight: 600; line-height: 1.08; letter-spacing: -0.035em; margin: 0; }
+.title-medium { font-family: 'Sora', sans-serif; font-size: clamp(2.2rem, 4.5vw, 3.75rem); font-weight: 600; line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 24px 0; }
+.accent { color: var(--green); text-shadow: 0 0 20px rgba(7,221,43,0.18); }
 
 .subtext { font-size: clamp(1rem, 1.2vw, 1.15rem); color: var(--text-muted); max-width: 650px; line-height: 1.7; font-weight: 400; letter-spacing: -0.01em; }
 .subtext.center { margin: 24px auto 0; }
 
 .tag { 
-  display: inline-block; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--green); text-transform: uppercase; letter-spacing: 0.15em; 
-  border: 1px solid rgba(7, 221, 43, 0.2); padding: 8px 16px; border-radius: 100px; margin-bottom: 24px; background: rgba(7, 221, 43, 0.05); font-weight: 700;
-  box-shadow: 0 0 20px rgba(7, 221, 43, 0.1);
+  display: inline-block; font-family: 'Space Mono', monospace; font-size: 10px; color: var(--green); text-transform: uppercase; letter-spacing: 0.14em; 
+  border: 1px solid rgba(7, 221, 43, 0.18); padding: 6px 14px; border-radius: 100px; margin-bottom: 24px; background: rgba(7, 221, 43, 0.04); font-weight: 700;
+  box-shadow: none;
 }
 .cta-pre-text { font-family: 'Sora', sans-serif; font-size: 1.1rem; color: #fff; font-weight: 600; margin-bottom: 20px; }
 
 .actions { margin-top: 48px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 .actions.left { justify-content: flex-start; }
 
-/* Botões Premium Framer */
+/* Botões Premium */
 .btn { 
-  font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; 
-  padding: 18px 36px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
-  border: 1px solid rgba(255,255,255,0.1); color: #fff; background: rgba(255,255,255,0.03); border-radius: 100px; backdrop-filter: blur(10px);
+  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.02em; text-decoration: none; 
+  padding: 16px 32px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.3s var(--ease-smooth); 
+  border: 1px solid rgba(255,255,255,0.1); color: #fff; background: rgba(255,255,255,0.04); border-radius: 100px; backdrop-filter: blur(10px);
 }
-.btn.primary { background: #fff; color: #000; border: none; box-shadow: 0 0 0 0 rgba(255,255,255,0); }
-.btn:hover { background: rgba(255,255,255,0.08); transform: translateY(-2px); }
-.btn.primary:hover { background: var(--green); color: #000; box-shadow: 0 8px 30px rgba(7, 221, 43, 0.4); }
+.btn.primary { background: #fff; color: #000; border: none; }
+.btn:hover { background: rgba(255,255,255,0.09); transform: translateY(-1px); }
+.btn.primary:hover { background: var(--green); color: #000; box-shadow: 0 8px 24px rgba(7, 221, 43, 0.22); }
 
 /* =========================================
    4. SMART HEADER (Glassmorphism)
@@ -313,20 +315,27 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
   opacity: 0.8;
 }
 
+/* Hero override: permite que o foguete ultrapasse a borda da seção no parallax */
+.hero-wrapper.section-skin {
+  isolation: auto;
+  overflow: visible;
+}
+
 /* Layout: Mais respiro lateral, menos densidade no texto */
-.hero-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; padding-top: 80px; }
-.hero-container { position: relative; z-index: 2; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 80px; }
+.hero-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; padding-top: 80px; overflow: visible; z-index: 20; }
+.hero-container { position: relative; z-index: 2; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 80px; overflow: visible; }
 .hero-content { flex: 1; max-width: 680px; }
 
-/* Tipografia: Reduzida ~20%, peso menor, hierarquia clara */
+/* Tipografia: controlada, hierarquia clara, sem uppercase */
 .hero-title { 
   font-family: 'Sora', sans-serif; 
-  font-size: clamp(2.4rem, 4.5vw, 4.5rem); 
+  font-size: clamp(2.1rem, 3.8vw, 3.9rem); 
   font-weight: 600; 
-  line-height: 1.18; 
-  letter-spacing: -0.03em; 
-  margin: 0 0 24px 0; 
+  line-height: 1.22; 
+  letter-spacing: -0.028em; 
+  margin: 0 0 20px 0; 
   color: var(--text-main);
+  max-width: 600px;
 }
 .hero-subheadline { 
   font-family: 'Inter', sans-serif; 
@@ -340,45 +349,41 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
 /* Botões Institucionais Premium */
 .hero-actions { display: flex; gap: 16px; justify-content: flex-start; flex-wrap: wrap; }
+/* Botões Hero — consistentes com o sistema global */
 .btn-hero { 
   font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; text-decoration: none; 
-  padding: 16px 32px; display: inline-flex; align-items: center; justify-content: center; 
-  transition: all 0.3s ease; border-radius: 6px; letter-spacing: 0.05em;
+  padding: 15px 30px; display: inline-flex; align-items: center; justify-content: center; 
+  transition: all 0.3s var(--ease-smooth); border-radius: 100px; letter-spacing: 0.02em;
 }
-.btn-solid { background: #EAEAEA; color: #050505; border: 1px solid #EAEAEA; }
-.btn-solid:hover { background: #FFFFFF; transform: translateY(-2px); }
-.btn-outline { background: transparent; color: var(--text-main); border: 1px solid rgba(255, 255, 255, 0.15); }
-.btn-outline:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
+.btn-solid { background: #EBEBEB; color: #050505; border: 1px solid #EBEBEB; }
+.btn-solid:hover { background: #FFFFFF; transform: translateY(-1px); }
+.btn-outline { background: transparent; color: var(--text-main); border: 1px solid rgba(255, 255, 255, 0.14); }
+.btn-outline:hover { background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.28); transform: translateY(-1px); }
 
-/* Elemento 3D: Menor (-15%), técnico, sem glow exagerado */
-.core-3d-wrapper { position: relative; width: 340px; height: 340px; flex-shrink: 0; }
-.core-3d-blur {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 260px; height: 260px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(7, 221, 43, 0.02) 0%, transparent 60%);
-  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  z-index: 0;
+/* Elemento 3D: Grande o suficiente para caber o foguete inteiro */
+.core-3d-wrapper { position: relative; width: 450px; height: 600px; flex-shrink: 0; overflow: visible; }
+.core-3d-blur { display: none; /* Removido: causava círculo visível no fundo */ }
+/* =========================================
+   ROCKET HERO ELEMENT
+========================================= */
+.rocket-wrapper {
+  position: relative; /* Remove o absolute para respeitar o flexbox */
+  width: 450px; 
+  height: 650px;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  z-index: 2;
+  overflow: visible;
+  pointer-events: none;
+  margin-top: 60px;
 }
-.gyro { width: 100%; height: 100%; transform-style: preserve-3d; animation: gyro-spin 35s linear infinite; position: relative; z-index: 1;}
-.ring { position: absolute; top: 50%; left: 50%; border-radius: 50%; border: 1px solid rgba(255,255,255,0.06); }
-.ring-1 { width: 100%; height: 100%; transform: translate(-50%, -50%) rotateX(60deg); animation: r1 18s linear infinite reverse; }
-.ring-2 { width: 75%; height: 75%; transform: translate(-50%, -50%) rotateY(60deg); animation: r2 24s linear infinite; border: 1px dashed rgba(255,255,255,0.1); }
-.ring-3 { width: 50%; height: 50%; transform: translate(-50%, -50%) rotateZ(45deg); animation: r1 14s linear infinite; border: 1px solid rgba(7, 221, 43, 0.15); }
-.center-node { 
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-  width: 14px; height: 14px; background: var(--green); border-radius: 50%; 
-  /* Reduzido brilho externo, adicionada sombra interna para parecer peça mecânica */
-  box-shadow: 0 0 15px rgba(7, 221, 43, 0.2), inset 0 0 8px rgba(0,0,0,0.6); 
-}
-
-@keyframes gyro-spin { to { transform: rotateY(360deg) rotateX(45deg); } }
-@keyframes r1 { to { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(360deg); } }
-@keyframes r2 { to { transform: translate(-50%, -50%) rotateY(60deg) rotateX(360deg); } }
 
 @media (max-width: 1024px) { 
   .hero-container { flex-direction: column; text-align: left; gap: 50px; } 
   .hero-content { align-items: flex-start; display: flex; flex-direction: column; }
-  .core-3d-wrapper { width: 280px; height: 280px; align-self: center; margin-top: 20px;} 
+  .core-3d-wrapper { width: 300px; height: 400px; }
+  .rocket-wrapper { width: 300px; height: 400px; right: 50%; transform: translate(50%, -50%); } 
 }
 /* =========================================
    6. SEÇÃO DE MÉTODO (Surface Contrast & Glass Cards)
@@ -420,19 +425,19 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
   .galilee-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
 }
 
-/* O CARD DE VIDRO DEFINITIVO */
+/* Card de vidro — versão clean premium */
 .galilee-card {
-  background: linear-gradient(180deg, rgba(25, 28, 33, 0.4) 0%, rgba(12, 14, 18, 0.6) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 24px 40px -8px rgba(0, 0, 0, 0.8);
-  border-radius: 24px; padding: 40px 32px;
-  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-  display: flex; flex-direction: column; position: relative; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow: hidden;
+  background: linear-gradient(180deg, rgba(22, 24, 29, 0.45) 0%, rgba(10, 12, 16, 0.65) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 16px 32px -8px rgba(0, 0, 0, 0.55);
+  border-radius: 20px; padding: 36px 28px;
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  display: flex; flex-direction: column; position: relative; transition: transform 0.35s var(--ease-smooth), border-color 0.35s ease, box-shadow 0.35s ease; overflow: hidden;
 }
 
 .galilee-card:hover {
-  transform: translateY(-8px); border-color: rgba(7, 221, 43, 0.3);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 24px 40px -8px rgba(0, 0, 0, 0.9), 0 0 40px -10px rgba(7, 221, 43, 0.15);
+  transform: translateY(-5px); border-color: rgba(7, 221, 43, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 20px 40px -8px rgba(0, 0, 0, 0.7);
 }
 
 /* MODIFICAÇÃO: Altura do desenho visual reduzida para o card não ficar tão esticado verticalmente */
@@ -533,14 +538,13 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 }
 .services-list { list-style: none; padding: 0; margin: 0; }
 .service-item {
-  font-family: 'Sora', sans-serif; font-size: clamp(2rem, 4vw, 4.5rem); font-weight: 800;
-  text-transform: uppercase;
+  font-family: 'Sora', sans-serif; font-size: clamp(1.75rem, 3.5vw, 4rem); font-weight: 600;
   line-height: 1.05;
   cursor: pointer;
-  transition: color 0.4s ease; letter-spacing: -0.03em;
-  padding: 24px 0; display: block; color: rgba(0,0,0,0.14);
+  letter-spacing: -0.025em;
+  padding: 20px 0; display: block; color: rgba(0,0,0,0.14);
   transform: translateX(0);
-  transition: color 0.4s ease, transform 0.4s ease;
+  transition: color 0.35s var(--ease-smooth), transform 0.35s var(--ease-smooth);
 }
 .service-item:hover, .service-item.active {
   color: #0b0c0e;
@@ -601,7 +605,7 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
 .case-content { position: relative; z-index: 2; text-align: left;}
 .case-tag { font-family: 'Space Mono', monospace; background:#fff; color:#000; padding:6px 14px; font-size:10px; font-weight:700; border-radius:100px; display:inline-block; margin-bottom:16px; text-transform:uppercase; letter-spacing: 1px;}
-.case-title { font-family: 'Sora', sans-serif; font-size:clamp(2rem, 3.5vw, 3.5rem); font-weight:700; color:#fff; margin:0; line-height:1; letter-spacing:-0.03em; text-transform: uppercase;}
+.case-title { font-family: 'Sora', sans-serif; font-size:clamp(2rem, 3.5vw, 3.5rem); font-weight:700; color:#fff; margin:0; line-height:1.05; letter-spacing:-0.025em;}
 .case-desc { color:var(--text-muted); margin:12px 0 0 0; font-size:1.05rem; line-height:1.6; max-width:85%; }
 
 /* =========================================
@@ -661,12 +665,11 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
 .faq-header-title {
   font-family: 'Sora', sans-serif;
-  font-size: clamp(2.8rem, 5.5vw, 6rem);
-  font-weight: 900;
-  line-height: 0.88;
-  letter-spacing: -0.04em;
+  font-size: clamp(2.4rem, 5vw, 5rem);
+  font-weight: 600;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
   margin: 0;
-  text-transform: uppercase;
   color: #0b0c0e;
   max-width: 100%;
 }
@@ -776,8 +779,8 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
     
     <div class="hero-content reveal">
       <div class="tag">System Status: Go</div>
-      <h1 class="hero-title">Infraestrutura sólida para operações digitais que exigem <span class="accent">escala.</span></h1>
-      <p class="hero-subheadline">Arquitetura técnica, padronização de catálogo e integração sistêmica para negócios que precisam operar com estabilidade.</p>
+      <h1 class="hero-title">A infraestrutura técnica para o seu e-commerce <span class="accent">escalar.</span></h1>
+      <p class="hero-subheadline">Da criação da loja à integração com seu ERP e Marketplaces. Padronizamos sua operação para que você foque apenas em vender.</p>
       
       <div class="hero-actions">
         <a href="#metodo" class="btn-hero btn-solid">Conhecer a estrutura</a>
@@ -785,13 +788,10 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
       </div>
     </div>
 
-    <div class="core-3d-wrapper reveal" style="transition-delay: 0.2s;">
-      <div class="core-3d-blur"></div>
-      <div class="gyro">
-        <div class="ring ring-1"></div>
-        <div class="ring ring-2"></div>
-        <div class="ring ring-3"></div>
-        <div class="center-node"></div>
+    <div class="rocket-wrapper reveal" style="transition-delay: 0.2s;">
+      <div class="core-3d-wrapper">
+        <div class="core-3d-blur"></div>
+        <div id="canvas-3d-wrapper" style="width: 100%; height: 100%; position: relative; z-index: 1;"></div>
       </div>
     </div>
 
@@ -1185,7 +1185,374 @@ window.addEventListener('scroll', () => {
   else { mainHeader.classList.remove('header-hidden'); }
   lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
 });
+
+/* PARALLAX DO FOGUETE — apenas desktop (>1024px) */
+(function() {
+  const rocketEl = document.querySelector('.rocket-wrapper');
+  if (!rocketEl) return;
+
+  const MAX_TRANSLATE_Y = 700;  /* px para baixo ao rolar */
+  const MAX_ROTATE     = 12;    /* graus: de -2 até +10 */
+  const MIN_ROTATE     = -2;
+  const MIN_SCALE      = 0.9;
+
+  function applyParallax() {
+    if (window.innerWidth <= 1024) {
+      /* Reseta no mobile para não sujar o layout */
+      rocketEl.style.transform = '';
+      return;
+    }
+    const scrollY  = window.pageYOffset || document.documentElement.scrollTop;
+    const heroH    = document.querySelector('.hero-wrapper')?.offsetHeight || window.innerHeight;
+    /* Progresso de 0 (topo) → 1 (fim do hero) */
+    const progress = Math.min(Math.max(scrollY / heroH, 0), 1);
+
+    const ty    = progress * MAX_TRANSLATE_Y;
+    const rot   = MIN_ROTATE + progress * (MAX_ROTATE - MIN_ROTATE);
+    const scale = 1 - progress * (1 - MIN_SCALE);
+
+    rocketEl.style.transform = `translateY(${ty}px) rotate(${rot}deg) scale(${scale})`;
+  }
+
+  window.addEventListener('scroll', applyParallax, { passive: true });
+  window.addEventListener('resize', applyParallax);
+})();
 </script>
 
+
+<script>
+/*
+ * =====================================================
+ *  GLB → PARTICLE CLOUD  |  60,000 Points
+ *  Loads rocket.glb via custom face sampling
+ * =====================================================
+ *  ⚠️  Run via Live Server to avoid CORS errors.
+ * =====================================================
+ */
+document.addEventListener('DOMContentLoaded', function() {
+  var wrapper = document.getElementById('canvas-3d-wrapper');
+  if (!wrapper || typeof THREE === 'undefined') return;
+
+  /* ── SCENE ── */
+  var W = wrapper.offsetWidth || 400;
+  var H = wrapper.offsetHeight || 400;
+  var scene  = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 100);
+  camera.position.set(0, 0.1, 7);
+
+  var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio));
+  renderer.setSize(W, H);
+  wrapper.appendChild(renderer.domElement);
+
+/* ── GLOW SPRITE (Alta Resolução) ── */
+  var cs = 1024; // Aumentamos a resolução de 64 para 256 pixels
+  var cv = document.createElement('canvas');
+  cv.width = cv.height = cs;
+  var ctx = cv.getContext('2d');
+  var grd = ctx.createRadialGradient(cs/2, cs/2, 0, cs/2, cs/2, cs/2);
+  
+  // Gradiente mais suave para não parecer uma borda "dura" e serrilhada
+  grd.addColorStop(0.0,  'rgba(255,255,255,1)');
+  grd.addColorStop(0.15, 'rgba(255,255,255,0.9)');
+  grd.addColorStop(0.4,  'rgba(255,255,255,0.3)');
+  grd.addColorStop(1.0,  'rgba(0,0,0,0)');
+  
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, cs, cs);
+  var glowTex = new THREE.CanvasTexture(cv);
+  glowTex.minFilter = THREE.LinearMipMapLinearFilter;
+  /* ── CONSTANTS ── */
+  var N = 30000;
+  var cGreen = new THREE.Color('#07dd2b');
+  var cBlue  = new THREE.Color('#0044ff');
+  var cWhite = new THREE.Color('#ffffff');
+  var cTemp  = new THREE.Color();
+
+  var particleGroup = new THREE.Group();
+  scene.add(particleGroup);
+  particleGroup.rotation.z = -0.3;
+  particleGroup.rotation.x =  0.15;
+
+  /* ── CUSTOM TRIANGLE FACE SAMPLER ── */
+  function buildCloudFromGLTF(gltf) {
+    var triangles = [];
+    var totalArea = 0;
+    var minX=1e9, maxX=-1e9, minY=1e9, maxY=-1e9, minZ=1e9, maxZ=-1e9;
+
+    gltf.scene.updateMatrixWorld(true);
+
+    
+    gltf.scene.traverse(function(child) {
+      if (!child.isMesh || !child.geometry) return;
+      
+      var geo = child.geometry.clone();
+      geo.applyMatrix4(child.matrixWorld);
+      if (geo.index) geo = geo.toNonIndexed();
+      var pos = geo.attributes.position;
+      if (!pos || pos.count < 3) return;
+
+      geo.computeBoundingBox();
+      var bb = geo.boundingBox;
+      var extX = bb.max.x - bb.min.x;
+      var extY = bb.max.y - bb.min.y;
+      var extZ = bb.max.z - bb.min.z;
+      var maxHoriz = Math.max(extX, extZ);
+
+      /* ── FILTRO ANTI-LIXO DO SPLINE ── */
+      var meshName = child.name || '';
+      
+      // 1. Ignora paredes gigantes e planos de fundo
+      if (maxHoriz > 20 || extY > 20) {
+        console.log('Ignorado (Muito grande):', meshName);
+        return;
+      }
+      
+      // 2. Ignora os textos e painéis do Spline
+      if (meshName.includes('Text') || meshName.includes('Backdrop') || meshName.includes('Side')) {
+        console.log('Ignorado (Lixo do Spline):', meshName);
+        return;
+      }
+
+      for (var i = 0; i < pos.count; i += 3) {
+        var ax = pos.getX(i),   ay = pos.getY(i),   az = pos.getZ(i);
+        var bx = pos.getX(i+1), by = pos.getY(i+1), bz = pos.getZ(i+1);
+        var cx = pos.getX(i+2), cy = pos.getY(i+2), cz = pos.getZ(i+2);
+
+        var abx = bx-ax, aby = by-ay, abz = bz-az;
+        var acx = cx-ax, acy = cy-ay, acz = cz-az;
+        var crossX = aby*acz - abz*acy;
+        var crossY = abz*acx - abx*acz;
+        var crossZ = abx*acy - aby*acx;
+        var area = Math.sqrt(crossX*crossX + crossY*crossY + crossZ*crossZ) * 0.5;
+
+        if (area > 0.00001) {
+          triangles.push([ax,ay,az, bx,by,bz, cx,cy,cz, area]);
+          totalArea += area;
+          if (ax<minX) minX=ax; if (bx<minX) minX=bx; if (cx<minX) minX=cx;
+          if (ax>maxX) maxX=ax; if (bx>maxX) maxX=bx; if (cx>maxX) maxX=cx;
+          if (ay<minY) minY=ay; if (by<minY) minY=by; if (cy<minY) minY=cy;
+          if (ay>maxY) maxY=ay; if (by>maxY) maxY=by; if (cy>maxY) maxY=cy;
+          if (az<minZ) minZ=az; if (bz<minZ) minZ=bz; if (cz<minZ) minZ=cz;
+          if (az>maxZ) maxZ=az; if (bz>maxZ) maxZ=bz; if (cz>maxZ) maxZ=cz;
+        }
+      }
+    });
+
+
+
+    if (triangles.length === 0) { console.error('No triangles in model.'); return; }
+    console.log('Triangles found:', triangles.length, '| Total area:', totalArea.toFixed(2));
+
+    var sizeX = maxX - minX || 1;
+    var sizeY = maxY - minY || 1;
+    var cenX = (maxX+minX)/2, cenY = (maxY+minY)/2, cenZ = (maxZ+minZ)/2;
+    var scale = 5.5 / sizeY;
+
+    var positions = new Float32Array(N * 3);
+    var colors    = new Float32Array(N * 3);
+
+    /* Build CDF for area-weighted sampling */
+    var cdf = new Float32Array(triangles.length);
+    var runSum = 0;
+    for (var k = 0; k < triangles.length; k++) {
+      runSum += triangles[k][9];
+      cdf[k] = runSum;
+    }
+
+    for (var i = 0; i < N; i++) {
+      /* Binary search for triangle */
+      var rnd = Math.random() * totalArea;
+      var lo = 0, hi = triangles.length - 1;
+      while (lo < hi) {
+        var mid = (lo + hi) >> 1;
+        if (cdf[mid] < rnd) lo = mid + 1; else hi = mid;
+      }
+      var t = triangles[lo];
+
+      /* Barycentric random point on triangle */
+      var r1 = Math.random(), r2 = Math.random();
+      if (r1 + r2 > 1) { r1 = 1 - r1; r2 = 1 - r2; }
+
+      var px = (t[0] + r1*(t[3]-t[0]) + r2*(t[6]-t[0]) - cenX) * scale;
+      var py = (t[1] + r1*(t[4]-t[1]) + r2*(t[7]-t[1]) - cenY) * scale;
+      var pz = (t[2] + r1*(t[5]-t[2]) + r2*(t[8]-t[2]) - cenZ) * scale;
+
+      positions[i*3]   = px;
+      positions[i*3+1] = py;
+      positions[i*3+2] = pz;
+
+      /* Cinematic color */
+      var halfW = (sizeX * scale) * 0.5;
+      var nx = px / halfW;
+      var dist = Math.sqrt(px*px + pz*pz);
+      var edge = Math.min(dist / (halfW * 0.7), 1.0);
+
+      /* White body, green flame at bottom */
+      var normalizedY = (py - (-2.75 * scale)) / (5.5 * scale); /* 0 = bottom, 1 = top */
+      if (normalizedY < 0) normalizedY = 0;
+      if (normalizedY > 1) normalizedY = 1;
+
+      var flameCutoff = 0.22; /* bottom 22% = flame zone */
+      if (normalizedY < flameCutoff) {
+        /* Flame: bright green, brighter at very bottom */
+        var flameIntensity = 1.0 - (normalizedY / flameCutoff);
+        cTemp.copy(cGreen);
+        var sp = 0.8 + flameIntensity * 0.2 + Math.random() * 0.1;
+        colors[i*3]   = cTemp.r * sp;
+        colors[i*3+1] = cTemp.g * sp;
+        colors[i*3+2] = cTemp.b * sp;
+      } else {
+        /* Body: clean white with subtle brightness variation */
+        var sp = 0.7 + Math.random() * 0.3;
+        colors[i*3]   = sp;
+        colors[i*3+1] = sp;
+        colors[i*3+2] = sp;
+      }
+    }
+
+    var cloudGeo = new THREE.BufferGeometry();
+    cloudGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    cloudGeo.setAttribute('color',    new THREE.BufferAttribute(colors, 3));
+
+    var cloudMat = new THREE.PointsMaterial({
+size: 0.05,
+      map: glowTex,
+      vertexColors: true,
+      transparent: true,
+      opacity: 1, // Opacidade menor para dar aspecto de holograma profundo
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      sizeAttenuation: true
+    });
+
+    particleGroup.add(new THREE.Points(cloudGeo, cloudMat));
+
+    /* ── STORE BASE POSITIONS + RANDOM DRIFT VELOCITIES ── */
+    basePositions = new Float32Array(positions);
+ velocities = new Float32Array(N * 3);
+    for (var v = 0; v < N * 3; v++) {
+      velocities[v] = (Math.random() - 0.5) * 0.005; // Drift super sutil (apenas vibra no lugar)
+    }
+    cloudReady = true;
+  }
+
+  /* ── LOAD MODEL ── */
+  var loader = new THREE.GLTFLoader();
+  loader.load('foguete.glb',
+    function(gltf) {
+      buildCloudFromGLTF(gltf);
+      console.log('Particle cloud ready: ' + N + ' points.');
+    },
+    function(xhr) { if (xhr.total) console.log('Loading: ' + Math.round(xhr.loaded/xhr.total*100) + '%'); },
+    function(err) { console.error('Failed to load rocket.glb:', err); }
+  );
+
+  /* ── INTERACTION STATE ── */
+  var basePositions = null;
+  var velocities = null;
+  var cloudReady = false;
+
+  /* ── LIGHTWEIGHT MOUSE TRACKING ── */
+  var raycaster = new THREE.Raycaster();
+  var mousePlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+  var mouseNDC = new THREE.Vector2(-999, -999);
+  var localMouse = new THREE.Vector3();
+  var isHovering = false;
+  var inverseMatrix = new THREE.Matrix4();
+  var planeHit = new THREE.Vector3();
+
+  /* Enable pointer events on the canvas wrapper */
+  wrapper.style.pointerEvents = 'auto';
+
+  wrapper.addEventListener('mousemove', function(e) {
+    var rect = wrapper.getBoundingClientRect();
+    mouseNDC.x =  ((e.clientX - rect.left) / rect.width)  * 2 - 1;
+    mouseNDC.y = -((e.clientY - rect.top)  / rect.height) * 2 + 1;
+    isHovering = true;
+  });
+
+  wrapper.addEventListener('mouseleave', function() {
+    isHovering = false;
+  });
+
+  /* ── PHYSICS TUNING ── */
+  var hoverRadius = 1.0;
+  var pushStrength = 0.08;
+  var springK = 0.04;
+
+  /* ── ANIMATE: Organic Drift + Elastic Repulsion ── */
+  function animate() {
+    requestAnimationFrame(animate);
+    particleGroup.rotation.y -= 0.003;
+
+    if (cloudReady && particleGroup.children.length > 0) {
+      var points = particleGroup.children[0];
+      var posAttr = points.geometry.attributes.position;
+      var arr = posAttr.array;
+
+      /* Convert mouse to particleGroup local space */
+      if (isHovering) {
+        raycaster.setFromCamera(mouseNDC, camera);
+        if (raycaster.ray.intersectPlane(mousePlane, planeHit)) {
+          particleGroup.updateMatrixWorld();
+          inverseMatrix.copy(particleGroup.matrixWorld).invert();
+          localMouse.copy(planeHit).applyMatrix4(inverseMatrix);
+        }
+      }
+
+      for (var i = 0; i < N; i++) {
+        var ix = i * 3, iy = ix + 1, iz = ix + 2;
+
+        var cx = arr[ix],  cy = arr[iy],  cz = arr[iz];
+        var bx = basePositions[ix], by = basePositions[iy], bz = basePositions[iz];
+        var vx = velocities[ix], vy = velocities[iy], vz = velocities[iz];
+
+        /* 1. ORGANIC DRIFT: add per-particle velocity */
+        cx += vx;
+        cy += vy;
+        cz += vz;
+
+        /* 2. REPULSION: 2D distance (dx, dy) ignoring Z for Vue-like feel */
+        if (isHovering) {
+          var dx = cx - localMouse.x;
+          var dy = cy - localMouse.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < hoverRadius && dist > 0.001) {
+            var force = (1.0 - dist / hoverRadius);
+            var invDist = 1.0 / dist;
+            cx += dx * invDist * force * pushStrength;
+            cy += dy * invDist * force * pushStrength;
+          }
+        }
+
+        /* 3. ELASTIC SPRING: pull back to base position */
+        cx += (bx - cx) * springK;
+        cy += (by - cy) * springK;
+        cz += (bz - cz) * springK;
+
+        arr[ix] = cx;
+        arr[iy] = cy;
+        arr[iz] = cz;
+      }
+
+      posAttr.needsUpdate = true;
+    }
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  /* ── RESIZE ── */
+  window.addEventListener('resize', function() {
+    var w = wrapper.offsetWidth, h = wrapper.offsetHeight;
+    if (!w || !h) return;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  });
+});
+</script>
 </body>
 </html>
