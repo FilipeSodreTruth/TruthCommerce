@@ -1,0 +1,154 @@
+/* RESET */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  background:#0B0B0B;
+  color:#F5F5F5;
+  font-family:'Inter',sans-serif;
+}
+
+/* NAV */
+
+.nav-wrapper{
+  position:fixed;
+  top:30px;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  z-index:1000;
+}
+
+.nav-pill{
+  display:flex;
+  align-items:center;
+  gap:40px;
+  padding:14px 30px;
+  background:rgba(20,20,20,0.7);
+  backdrop-filter:blur(14px);
+  border-radius:60px;
+  border:1px solid rgba(255,255,255,0.06);
+}
+
+.nav-links{
+  display:flex;
+  gap:30px;
+}
+
+.nav-links a{
+  text-decoration:none;
+  color:#BDBDBD;
+  font-size:14px;
+  transition:0.3s;
+}
+
+.nav-links a:hover{
+  color:white;
+}
+
+.nav-cta{
+  padding:10px 22px;
+  background:white;
+  color:black;
+  border-radius:40px;
+  font-weight:600;
+  text-decoration:none;
+}
+
+.avatar{
+  width:32px;
+  height:32px;
+  background:#333;
+  border-radius:50%;
+}
+
+.hero{
+  min-height:100vh;
+  padding:220px 8% 140px 8%;
+  position:relative;
+  background:#050505;
+  overflow:hidden;
+}
+
+/* TEXTURA LEVE */
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity:0.3;
+  pointer-events:none;
+}
+
+/* PALAVRA DE FUNDO */
+.bg-layer{
+  position:absolute;
+  bottom:-80px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:clamp(160px,22vw,380px);
+  font-weight:900;
+  letter-spacing:-10px;
+  color:rgba(255,255,255,0.02);
+  white-space:nowrap;
+  pointer-events:none;
+}
+
+/* CONTAINER */
+.hero-container{
+  max-width:1200px;
+}
+
+/* TITULO */
+.hero-title{
+  font-size:clamp(56px,5vw,96px);
+  line-height:1;
+  font-weight:900;
+  letter-spacing:-3px;
+  max-width:1000px;
+}
+
+.highlight{
+  color:#32D74B;
+  display:inline-block;
+}
+
+/* META BLOCO DESLOCADO */
+.hero-meta{
+  margin-top:80px;
+  margin-left:120px;
+  max-width:520px;
+}
+
+.hero-meta p{
+  font-size:18px;
+  color:#9A9A9A;
+  line-height:1.6;
+}
+
+.buttons{
+  margin-top:40px;
+  display:flex;
+  gap:20px;
+}
+
+.btn-main{
+  padding:18px 36px;
+  border-radius:50px;
+  background:#32D74B;
+  color:black;
+  font-weight:600;
+  text-decoration:none;
+}
+
+.btn-ghost{
+  padding:18px 36px;
+  border-radius:50px;
+  border:1px solid rgba(255,255,255,0.15);
+  text-decoration:none;
+  color:white;
+}
