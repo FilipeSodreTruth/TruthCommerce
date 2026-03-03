@@ -110,58 +110,42 @@ body::before {
 
 
 
-/* Flares e Luzes Difusas de Fundo */
-
+/* Flares e Luzes Difusas de Fundo - Removidas para fundo ALL BLACK */
 .ambient-lighting {
-
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-
-  background: 
-
-    /* Flare Verde Topo Direito */
-
-    radial-gradient(1000px circle at 85% 0%, rgba(7, 221, 43, 0.08), transparent 100%),
-
-    /* Flare Prata Meio Esquerda */
-
-    radial-gradient(800px circle at -10% 40%, rgba(255, 255, 255, 0.03), transparent 100%),
-
-    /* Flare Verde Rodapé */
-
-    radial-gradient(1200px circle at 50% 110%, rgba(7, 221, 43, 0.06), transparent 100%);
-
-  filter: blur(60px);
-
+  display: none !important;
 }
 
 
 
-/* Tech Grid suave */
+/* Tech Grid removed - using space-bg */
 
-.tech-grid {
-
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-
-  background-size: 80px 80px;
-
+/* DEEP SPACE BACKGROUND */
+.space-bg {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  z-index: -2;
+  pointer-events: none;
+  background-color: #000000; /* Pure Black */
   background-image: 
-
-    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-
-  -webkit-mask-image: radial-gradient(ellipse at center, black 10%, transparent 70%);
-
-  mask-image: radial-gradient(ellipse at center, black 10%, transparent 70%);
-
+    radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 40px 70px, #dddddd, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 130px 80px, #aaaaaa, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 160px 120px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2.5px 2.5px at 200px 180px, #dddddd, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 250px 250px;
+  opacity: 0.5;
 }
 
-
+/* Force transparent backgrounds on all sections */
+section, #alerta, #metodo, #servicos, #projetos, #depoimentos, #faq, .surface-section {
+  background-color: transparent !important;
+  background: transparent !important;
+}
 
 /* =========================================
-
    3. TIPOGRAFIA & BOTÕES DE ALTO PADRÃO
-
 ========================================= */
 
 section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; padding: 140px 5%; z-index: 2; }
@@ -198,10 +182,7 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
   transform: translateX(-50%);
 
-  z-index: 0;
-
-  pointer-events: none;
-
+  display: none !important;
 }
 
 .section-skin > * { position: relative; z-index: 1; }
@@ -232,20 +213,10 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
 
 
-/* ALERTA: “capítulo” com brilho limpo */
-
 .skin-alert::before {
-
   background:
-
     linear-gradient(180deg, rgba(255,255,255,0.03), transparent 25%, transparent 75%, rgba(255,255,255,0.02) 100%),
-
     radial-gradient(900px circle at 15% 40%, rgba(255,255,255,0.05), transparent 60%);
-
-  border-top: 1px solid rgba(255,255,255,0.06);
-
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-
 }
 
 .skin-alert::after {
@@ -289,19 +260,10 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
 
 /* SERVIÇOS: listras diagonais bem sutis + flare verde */
-
 .skin-services::before {
-
   background:
-
     radial-gradient(900px circle at 80% 35%, rgba(7, 221, 43, 0.10), transparent 60%),
-
     linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0) 45%, rgba(255,255,255,0.01) 100%);
-
-  border-top: 1px solid rgba(255,255,255,0.05);
-
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-
 }
 
 .skin-services::after {
@@ -327,21 +289,11 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
 
 /* PROJETOS: campo “estelar” discreto (sem ficar verde) */
-
 .skin-projects::before {
-
   background:
-
     radial-gradient(1100px circle at 50% 15%, rgba(255,255,255,0.04), transparent 60%),
-
     radial-gradient(900px circle at 15% 70%, rgba(7, 221, 43, 0.07), transparent 65%),
-
     linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.45) 100%);
-
-  border-top: 1px solid rgba(255,255,255,0.05);
-
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-
 }
 
 .skin-projects::after {
@@ -376,7 +328,7 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
     radial-gradient(900px circle at 30% 60%, rgba(255,255,255,0.05), transparent 60%);
 
-  border-top: 1px solid rgba(255,255,255,0.05);
+  
 
 }
 
@@ -395,112 +347,42 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
 
 /* =========================================
-
-   3.2. TEMA CLARO (Astra-like)
-
-   - Seções claras de “respiro” (branco/cinza), mantendo o verde como acento
-
+   3.2. TEMA CLARO (Astra-like) - OVERRIDDEN TO DARK THEME
 ========================================= */
-
-.theme-light {
-
-  color: #0b0c0e;
-
+.theme-light { color: #FFFFFF !important; }
+.theme-light::before, .theme-light::after {
+  background: transparent !important;
+  box-shadow: none !important;
 }
-
-.theme-light::before {
-
-  background:
-
-    radial-gradient(900px circle at 18% 0%, rgba(7, 221, 43, 0.10), transparent 62%),
-
-    radial-gradient(900px circle at 85% 35%, rgba(0, 0, 0, 0.06), transparent 58%),
-
-    linear-gradient(180deg, #f6f6f7 0%, #eeeeef 100%);
-
-  box-shadow:
-
-    inset 0 1px 0 rgba(255,255,255,0.6),
-
-    inset 0 -1px 0 rgba(0,0,0,0.06);
-
-}
-
-.theme-light::after {
-
-  background-image:
-
-    radial-gradient(rgba(0,0,0,0.12) 1px, transparent 1px),
-
-    radial-gradient(rgba(0,0,0,0.06) 1px, transparent 1px);
-
-  background-size: 120px 120px, 60px 60px;
-
-  background-position: 10px 20px, 0 0;
-
-  opacity: 0.10;
-
-  -webkit-mask-image: radial-gradient(ellipse at center, black 35%, transparent 80%);
-
-  mask-image: radial-gradient(ellipse at center, black 35%, transparent 80%);
-
-}
+.theme-light .title-huge, .theme-light .title-medium { color: #FFFFFF !important; }
+.theme-light .subtext { color: var(--text-muted) !important; }
+.theme-light .faq-question { color: #FFFFFF !important; }
+.theme-light .faq-question:hover { color: var(--green) !important; }
+.theme-light .faq-answer { color: var(--text-muted) !important; }
+.theme-light .faq-item { border-color: rgba(255,255,255,0.10) !important; }
+.theme-light .btn { color: #FFFFFF; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+.theme-light .btn:hover { background: rgba(255,255,255,0.1); }
+.theme-light .btn.primary { background: #FFFFFF; color: #000; }
+.theme-light .btn.primary:hover { background: var(--green); color: #000; box-shadow: 0 8px 24px rgba(7, 221, 43, 0.22); }
 
 
 
-/* Ajustes tipográficos/elementos dentro de seções claras */
 
-.theme-light .title-huge,
-
-.theme-light .title-medium { color: #0b0c0e; }
-
-.theme-light .subtext { color: rgba(0,0,0,0.62); }
-
+/* Ajustes tipográficos/elementos dentro de seções claras overrides aplicados acima via !important */
 .theme-light .accent { color: var(--green); text-shadow: none; }
-
-.theme-light .cta-pre-text { color: #0b0c0e; }
-
-
+.theme-light .cta-pre-text { color: #FFFFFF; }
 
 .theme-light .tag {
-
   color: var(--green);
-
   border-color: rgba(7, 221, 43, 0.28);
-
   background: rgba(7, 221, 43, 0.06);
-
   box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-
 }
 
 
 
-.theme-light .btn {
+/* Botões movidos para override acima */
 
-  color: #0b0c0e;
-
-  background: rgba(255,255,255,0.70);
-
-  border: 1px solid rgba(0,0,0,0.14);
-
-}
-
-.theme-light .btn:hover {
-
-  background: rgba(255,255,255,0.90);
-
-}
-
-.theme-light .btn.primary {
-
-  background: #0b0c0e;
-
-  color: #fff;
-
-  border: none;
-
-}
 
 .theme-light .btn.primary:hover {
 
@@ -779,9 +661,6 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
   background-color: var(--bg-surface);
 
-  border-top: 1px solid rgba(255,255,255,0.03);
-
-  border-bottom: 1px solid rgba(255,255,255,0.03);
 
 
 
@@ -833,8 +712,8 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
   min-height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: flex-end; /* Pushes text right */
-  padding: 0 5%;
+  justify-content: flex-end; 
+  padding: 0 20% 0 5%;
   position: relative;
   z-index: 5;
 }
@@ -843,20 +722,31 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
   width: 50%;
 
-  max-width: 600px;
+  max-width: 800px;
 
   pointer-events: auto;
 
   text-align: left;
+  padding-right: 200PX;
 
 }
 
 @media (max-width: 1024px) { 
-
-  #alerta { justify-content: center; }
-
-  .alerta-text-content { width: 100%; text-align: center; }
-
+  .hero-content { z-index: 100 !important; position: relative; }
+  #alerta { 
+    align-items: flex-start !important;
+    padding: 15vh 5% 0 5% !important; /* Reset desktop padding, add top breathing room */
+    justify-content: flex-start !important; 
+  }
+  .alerta-text-content { 
+    width: 100% !important; 
+    max-width: none !important; /* Override desktop max-width: 800px */
+    padding-right: 0 !important; /* Override desktop padding-right: 200px */
+    text-align: left !important; 
+    z-index: 100 !important; 
+    position: relative;
+    text-shadow: 0px 4px 24px rgba(0,0,0,0.9);
+  }
 }
 
 
@@ -879,32 +769,22 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
 
 
-/* Card de vidro — versão clean premium */
+/* Card de vidro — Ultra-Minimal Glassmorphism */
 
 .galilee-card {
-
-  background: linear-gradient(180deg, rgba(22, 24, 29, 0.45) 0%, rgba(10, 12, 16, 0.65) 100%);
-
-  border: 1px solid rgba(255, 255, 255, 0.05);
-
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 16px 32px -8px rgba(0, 0, 0, 0.55);
-
+  background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(0,0,0,0) 100%) !important;
+  border: none !important;
+  border-top: 1px solid rgba(255,255,255,0.15) !important;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
   border-radius: 20px; padding: 36px 28px;
-
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-
+  backdrop-filter: blur(16px) !important; -webkit-backdrop-filter: blur(16px) !important;
   display: flex; flex-direction: column; position: relative; transition: transform 0.35s var(--ease-smooth), border-color 0.35s ease, box-shadow 0.35s ease; overflow: hidden;
-
 }
 
-
-
 .galilee-card:hover {
-
-  transform: translateY(-5px); border-color: rgba(7, 221, 43, 0.2);
-
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 20px 40px -8px rgba(0, 0, 0, 0.7);
-
+  transform: translateY(-5px); border-color: rgba(7, 221, 43, 0.3) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  box-shadow: 0 10px 40px rgba(7, 221, 43, 0.08) !important;
 }
 
 
@@ -912,15 +792,10 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 /* MODIFICAÇÃO: Altura do desenho visual reduzida para o card não ficar tão esticado verticalmente */
 
 .galilee-visual {
-
-  width: 100%; height: 90px; min-height: 90px; /* Altura reduzida */
-
-  flex-shrink: 0; background: rgba(0, 0, 0, 0.3); border-radius: 12px; 
-
-  border: 1px solid rgba(255, 255, 255, 0.03); box-shadow: inset 0 2px 10px rgba(0,0,0,0.5); 
-
+  width: 100%; height: 90px; min-height: 90px;
+  flex-shrink: 0; background: transparent !important; border-radius: 12px; 
+  border: 1px solid rgba(255,255,255,0.05) !important; box-shadow: none; 
   display: flex; flex-direction: column; justify-content: center; padding: 20px; gap: 12px; margin-bottom: 24px;
-
 }
 
 .g-line { height: 4px; background: rgba(255, 255, 255, 0.15); border-radius: 99px; }
@@ -1002,158 +877,146 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
 
 .services-label {
-
   font-family: 'Space Mono', monospace;
-
   font-size: 11px;
-
   text-transform: uppercase;
-
   letter-spacing: 0.12em;
-
   font-weight: 700;
-
-  color: rgba(0,0,0,0.45);
-
+  color: rgba(255,255,255,0.45);
   display: block;
-
   margin: 0;
-
 }
-
-
 
 .services-container {
-
   display: grid;
-
   grid-template-columns: 1fr;
-
   gap: 32px;
-
   width: 100%;
-
   height: 100%;
-
-
 
   /* Foto centralizada em relação ao bloco de títulos */
-
   align-items: center;
-
 }
-
 @media (min-width: 900px) {
-
   .services-container {
-
     grid-template-columns: clamp(320px, 30vw, 420px) minmax(0, 1fr);
-
     gap: clamp(32px, 5vw, 88px);
-
   }
-
 }
-
-
 
 .services-img-col {
-
   height: 100%;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
 }
-
-
 
 .services-img-wrapper {
-
   width: 100%;
-
   aspect-ratio: 3/4;
-
   border-radius: 16px;
-
   overflow: hidden;
-
-  background: #e8e8e8;
-
-  box-shadow: 0 24px 48px -12px rgba(0,0,0,0.18);
-
+  background: #111;
+  box-shadow: 0 24px 48px -12px rgba(0,0,0,0.4);
   display: block;
-
 }
 
+/* Mobile Services: Stacked Brutalist Layout */
+@media (max-width: 1024px) {
+  #servicos { height: auto !important; padding: clamp(48px, 8vh, 80px) 5% !important; }
+  .services-img-col { display: none !important; }
+  .services-container { grid-template-columns: 1fr !important; }
+  .services-list { display: flex; flex-direction: column; gap: 48px; width: 100%; }
+  .service-item { padding: 0 !important; transform: none !important; color: #FFFFFF !important; }
+  .service-item:hover, .service-item.active { transform: none !important; }
+  .service-item .service-title {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(1.5rem, 6vw, 2rem);
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #FFFFFF;
+    border-left: 2px solid var(--green);
+    padding-left: 12px;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+  .mobile-service-img {
+    display: block !important;
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(255,255,255,0.05);
+    opacity: 0.8;
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    transition: all 0.5s ease;
+  }
+  .mobile-service-img:hover {
+    opacity: 1;
+    border-color: rgba(7, 221, 43, 0.3);
+  }
+  .service-desc {
+    max-height: none !important;
+    opacity: 1 !important;
+    margin: 0 !important;
+    font-size: 1rem;
+  }
+}
 .services-img-wrapper img {
-
   width: 100%;
-
   height: 100%;
-
   object-fit: cover;
-
-  transition: opacity 0.35s ease;
-
+  transition: all 0.5s ease;
+  filter: grayscale(100%) contrast(1.2) brightness(0.7);
+  opacity: 0.8;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 16px;
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+.services-img-wrapper:hover img {
+  filter: grayscale(20%) contrast(1.1) brightness(1);
+  opacity: 1;
+  border-color: rgba(7, 221, 43, 0.3);
 }
 
 .services-list { list-style: none; padding: 0; margin: 0; }
 
 .service-item {
-
   font-family: 'Sora', sans-serif; font-size: clamp(1.75rem, 3.5vw, 4rem); font-weight: 600;
-
   line-height: 1.05;
-
   cursor: pointer;
-
   letter-spacing: -0.025em;
-
-  padding: 20px 0; display: block; color: rgba(0,0,0,0.14);
-
+  padding: 20px 0; display: block; color: rgba(255,255,255,0.2);
   transform: translateX(0);
-
   transition: color 0.35s var(--ease-smooth), transform 0.35s var(--ease-smooth);
-
 }
 
 .service-item:hover, .service-item.active {
-
-  color: #0b0c0e;
-
+  color: #FFFFFF;
   transform: translateX(28px);
-
 }
 
 .service-desc {
-
   margin: 12px 0 0 0;
-
   font-family: 'Inter', sans-serif;
-
   font-size: 0.95rem;
-
   line-height: 1.6;
-
   letter-spacing: normal;
-
   text-transform: none;
-
-  color: rgba(0,0,0,0.56);
-
+  color: rgba(255,255,255,0.6);
   max-height: 0;
-
   opacity: 0;
-
   overflow: hidden;
-
   transition: max-height 0.35s ease, opacity 0.35s ease;
-
 }
+
+/* Mobile service images: hidden on desktop */
+.mobile-service-img { display: none; }
+.service-title { pointer-events: none; }
 
 .service-item:hover .service-desc,
 
@@ -1256,20 +1119,19 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 .video-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 32px; margin-top: 64px; padding-bottom: 40px; }
 
 .video-card { 
-
   position: relative; width: 320px; height: 520px; border-radius: 24px; 
-
   background: var(--bg-surface); border: 1px solid rgba(255, 255, 255, 0.05); 
-
   box-shadow: none;
-
-  overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.4s ease; background-size: cover; background-position: center; 
-
+  overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.5s ease; background-size: cover; background-position: center; 
+  filter: grayscale(100%) contrast(1.2) brightness(0.7);
+  opacity: 0.8;
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
 }
 
 @media(min-width: 1024px) { .video-card { width: 340px; height: 560px; } }
 
-.video-card:hover { transform: translateY(-8px); border-color: rgba(7, 221, 43, 0.4); box-shadow: none; }
+.video-card:hover { transform: translateY(-8px); border-color: rgba(7, 221, 43, 0.3); box-shadow: none; filter: grayscale(20%) contrast(1.1) brightness(1); opacity: 1; }
 
 .video-card::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.4); transition: background 0.4s; }
 
@@ -1302,17 +1164,11 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 ========================================= */
 
 #faq {
-
   width: 100vw;
-
   max-width: none;
-
   margin: 0;
-
   margin-left: calc(-50vw + 50%);
-
   padding: 120px 0;
-
 }
 
 
@@ -1369,7 +1225,7 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
   margin: 0;
 
-  color: #0b0c0e;
+  color: #FFFFFF;
 
   max-width: 100%;
 
@@ -1377,27 +1233,22 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
 .faq-list { width: 100%; display: flex; flex-direction: column; }
 
-.faq-item { border-bottom: 1px solid rgba(0, 0, 0, 0.10); }
+.faq-item { border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; backdrop-filter: blur(8px); }
 
-.faq-item:first-child { border-top: 1px solid rgba(0, 0, 0, 0.10); }
+.faq-item:first-child { border-top: 1px solid rgba(255, 255, 255, 0.05) !important; }
 
 
 
 .faq-question {
-
   width: 100%; text-align: left; background: transparent; border: none;
-
-  padding: 32px 0; font-family: 'Sora', sans-serif; font-size: 1.2rem; font-weight: 700;
-
-  color: #0b0c0e; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
-
-  transition: color 0.3s ease; line-height: 1.3; letter-spacing: -0.01em;
-
+  padding: 32px 0; font-family: 'Sora', sans-serif; font-size: 1.2rem; font-weight: 400;
+  color: #FFFFFF !important; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+  transition: color 0.3s ease, text-shadow 0.3s ease; line-height: 1.3; letter-spacing: -0.01em;
 }
 
-.faq-question:hover { color: rgba(0,0,0,0.6); }
+.faq-question:hover { color: var(--green) !important; text-shadow: 0 0 10px rgba(7, 221, 43, 0.3); }
 
-.faq-item.faq-open .faq-question { color: #0b0c0e; }
+.faq-item.faq-open .faq-question { color: #FFFFFF; }
 
 
 
@@ -1437,7 +1288,7 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
   transition: max-height 280ms cubic-bezier(0.16, 1, 0.3, 1);
 
-  color: rgba(0,0,0,0.62);
+  color: rgba(255,255,255,0.6);
 
   line-height: 1.7;
 
@@ -1469,19 +1320,12 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
 
 
-.theme-light .faq-question { color: #0b0c0e; }
-
-.theme-light .faq-question:hover { color: rgba(0,0,0,0.6); }
-
-.theme-light .faq-answer { color: rgba(0,0,0,0.62); }
-
-.theme-light .faq-item { border-color: rgba(0,0,0,0.10); }
+/* Overrides já aplicados */
 
 
 
-/* MODIFICAÇÃO: margin-top: 0 para o footer não deixar buraco com o FAQ. O padding do FAQ faz o respiro. */
-
-.footer { position: relative; padding: 120px 5% 60px; margin-top: 0; background: #020202; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; isolation: isolate; }
+/* MODIFICAÇÃO: margin-top: 0 para o footer não deixar buraco com o FAQ. */
+.footer { position: relative; padding: 120px 5% 60px; margin-top: 0; background: linear-gradient(180deg, transparent 0%, rgba(4, 5, 7, 0.9) 100%) !important; border-top: 1px solid rgba(255,255,255,0.05) !important; display: flex; flex-direction: column; align-items: center; isolation: isolate; }
 
 .footer::before {
 
@@ -1497,13 +1341,13 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
   background:
 
-    radial-gradient(900px circle at 20% 20%, rgba(7, 221, 43, 0.10), transparent 60%),
+    radial-gradient(900px circle at 20% 0%, rgba(7, 221, 43, 0.15), transparent 55%),
 
-    radial-gradient(900px circle at 80% 60%, rgba(255, 255, 255, 0.04), transparent 60%),
+    radial-gradient(700px circle at 80% 20%, rgba(7, 221, 43, 0.08), transparent 50%),
 
-    linear-gradient(180deg, rgba(2,2,2,0.2), rgba(2,2,2,1) 100%);
+    linear-gradient(180deg, rgba(7, 221, 43, 0.05), transparent 30%);
 
-  opacity: 0.9;
+  opacity: 1;
 
 }
 
@@ -1533,7 +1377,7 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
 /* UTILITÁRIOS */
 
-.reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal { opacity: 0; transform: translateY(60px); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
 
 .reveal.active { opacity: 1; transform: translateY(0); }
 
@@ -1544,13 +1388,8 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
 
 
 <body>
-
-
-
+<div class="space-bg"></div>
 <div class="ambient-lighting"></div>
-
-<div class="tech-grid"></div>
-
 
 
 <!-- 3D Canvas: Direct child of body, outside all sections -->
@@ -1800,27 +1639,27 @@ section { position: relative; width: 100%; max-width: 1300px; margin: 0 auto; pa
       <ul class="services-list">
 
         <li class="service-item active" data-img="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop">
-
-          Infraestrutura Marketplaces
-
+          <div class="service-title">Infraestrutura Marketplaces</div>
+          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop" class="mobile-service-img" alt="Infraestrutura Marketplaces">
+          <div class="service-desc">Integração completa com Mercado Livre, Amazon, Shopee e outros canais de venda. Catálogo unificado e gestão centralizada.</div>
         </li>
 
         <li class="service-item" data-img="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop">
-
-          Arquitetura de E-commerce
-
+          <div class="service-title">Arquitetura de E-commerce</div>
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop" class="mobile-service-img" alt="Arquitetura de E-commerce">
+          <div class="service-desc">Criação e estruturação da sua loja virtual com design premium, fluxo otimizado e integração com ERP.</div>
         </li>
 
         <li class="service-item" data-img="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=800&auto=format&fit=crop">
-
-          Identidade & Posicionamento
-
+          <div class="service-title">Identidade & Posicionamento</div>
+          <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=800&auto=format&fit=crop" class="mobile-service-img" alt="Identidade e Posicionamento">
+          <div class="service-desc">Branding estratégico, identidade visual e posicionamento de marca para o ambiente digital.</div>
         </li>
 
         <li class="service-item" data-img="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop">
-
-          Capacitação Operacional
-
+          <div class="service-title">Capacitação Operacional</div>
+          <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop" class="mobile-service-img" alt="Capacitação Operacional">
+          <div class="service-desc">Treinamento da equipe para gestão autônoma da operação digital. Documentação e suporte contínuo.</div>
         </li>
 
       </ul>
@@ -2500,11 +2339,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var N = 30000;
 
   var cGreen = new THREE.Color('#07dd2b');
-
-  var cBlue  = new THREE.Color('#1a6bff');
-
   var cWhite = new THREE.Color('#ffffff');
-
   var cTemp  = new THREE.Color();
 
 
@@ -2518,9 +2353,7 @@ document.addEventListener('DOMContentLoaded', function() {
   particleGroup.rotation.x =  0.15;
 
 
-
-  particleGroup.position.set(4.0, -0.5, 0);
-  particleGroup.scale.set(1.5, 1.5, 1.5);
+  /* Initial position/scale set by GSAP matchMedia below */
 
 
 
@@ -2717,61 +2550,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
       if (colorScheme === 'rocket') {
-
         var flameCutoff = 0.22;
-
         if (normalizedY < flameCutoff) {
-
           var flameIntensity = 1.0 - (normalizedY / flameCutoff);
-
           cTemp.copy(cGreen);
-
           var sp = 0.8 + flameIntensity * 0.2 + Math.random() * 0.1;
-
           colors[i*3] = cTemp.r*sp; colors[i*3+1] = cTemp.g*sp; colors[i*3+2] = cTemp.b*sp;
-
         } else {
-
           var sp = 0.95 + Math.random() * 0.3;
-
           colors[i*3] = sp; colors[i*3+1] = sp; colors[i*3+2] = sp;
-
         }
-
       } else if (colorScheme === 'astronaut') {
-
-        /* Dark astronaut for light backgrounds: Black/grey body + Green accents */
-
+        /* Bright White Astronaut + Green Accents */
         var noise = Math.sin(i * 12.9898 + 78.233) * 0.5 + 0.5;
-
         var visorZone = normalizedY > 0.65 && normalizedY < 0.85;
 
         if (visorZone && Math.random() > 0.3) {
-
-          /* Dark green visor */
-
+          /* Bright green visor */
           cTemp.copy(cGreen);
-
-          var sp = 0.4 + Math.random() * 0.3;
-
-          colors[i*3] = cTemp.r*sp * 0.3; colors[i*3+1] = cTemp.g*sp * 0.4; colors[i*3+2] = cTemp.b*sp * 0.2;
-
+          var sp = 0.6 + Math.random() * 0.4;
+          colors[i*3] = cTemp.r*sp; colors[i*3+1] = cTemp.g*sp; colors[i*3+2] = cTemp.b*sp;
         } else if (noise > 0.88) {
-
-          /* Subtle dark green edge glow */
-
-          colors[i*3] = 0.0; colors[i*3+1] = 0.12 + Math.random() * 0.08; colors[i*3+2] = 0.02;
-
+          /* Neon green edge glow */
+          cTemp.copy(cGreen);
+          colors[i*3] = cTemp.r * 0.8; colors[i*3+1] = cTemp.g * 0.8; colors[i*3+2] = cTemp.b * 0.8;
         } else {
-
-          /* Near-black body */
-
-          var sp = 0.03 + Math.random() * 0.08;
-
+          /* Pure White/Bright Silver body */
+          var sp = 0.85 + Math.random() * 0.15;
           colors[i*3] = sp; colors[i*3+1] = sp; colors[i*3+2] = sp;
-
         }
-
       }
 
     }
@@ -2934,28 +2741,64 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-    /* ── GSAP SCROLLTRIGGER: MORPH & MOVE ── */
+    /* ── GSAP SCROLLTRIGGER: RESPONSIVE TRAJECTORY ── */
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       gsap.registerPlugin(ScrollTrigger);
 
-      var mainTimeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: '.hero-wrapper',
-          start: 'top top',
-          endTrigger: '#alerta',
-          end: 'center center',
-          scrub: 1.0
+      var mm = gsap.matchMedia();
+
+      mm.add({
+        isDesktop: "(min-width: 769px)",
+        isMobile: "(max-width: 768px)"
+      }, function(context) {
+        var isDesktop = context.conditions.isDesktop;
+        var isMobile = context.conditions.isMobile;
+
+        // 1. SET INITIAL POSITIONS BASED ON DEVICE
+        if (isMobile) {
+          particleGroup.position.set(1.5, -2.8, 0); // Start low and to the right
+          particleGroup.scale.set(1.0, 1.0, 1.0);
+          particleGroup.rotation.z = 0.6; // Tilt: base right, tip left
+        } else {
+          particleGroup.position.set(4.0, -0.5, 0); // Right side for Desktop Hero
+          particleGroup.scale.set(1.5, 1.5, 1.5);
         }
+
+        var mainTimeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.hero-wrapper',
+            start: 'top top',
+            endTrigger: '#alerta',
+            end: 'center center',
+            scrub: 1.0
+          }
+        });
+
+        // Morph Shape (Same for both)
+        mainTimeline.to(morphState, { progress: 1, duration: 1, ease: 'power2.inOut' }, 0);
+
+        // 2. MOVE TRAJECTORY BASED ON DEVICE
+        if (isMobile) {
+          // On mobile, move to bottom-center (below the Alerta text)
+          mainTimeline.to(particleGroup.position, { x: 0, y: -2.0, duration: 1, ease: 'power2.inOut' }, 0);
+        } else {
+          // On desktop, move from right to left
+          mainTimeline.to(particleGroup.position, { x: -4.0, y: -1, duration: 1, ease: 'power2.inOut' }, 0);
+        }
+
+        // Rotation based on device
+        if (isMobile) {
+          // Straighten astronaut on mobile (remove diagonal tilt)
+          mainTimeline.to(particleGroup.rotation, { x: 0, z: 0, duration: 1, ease: 'power2.inOut' }, 0);
+        } else {
+          // Straighten rotation on desktop
+          mainTimeline.to(particleGroup.rotation, { x: 0, z: 0, duration: 1, ease: 'power2.inOut' }, 0);
+        }
+
+        return function() {
+          // Cleanup when resizing across breakpoints
+        };
       });
-
-      // Morph Shape - Start slightly earlier
-      mainTimeline.to(morphState, { progress: 1, duration: 1, ease: 'power2.inOut' }, 0);
-
-      // Move object from right (4.0) to left (-4.0) and slightly higher (-0.5 instead of -1.0)
-      mainTimeline.to(particleGroup.position, { x: -4.0, y: -0.2, duration: 1, ease: 'power2.inOut' }, 0);
-
-      // Straighten rotation
-      mainTimeline.to(particleGroup.rotation, { x: 0, z: 0, duration: 1, ease: 'power2.inOut' }, 0);
     }
 
   }).catch(function(err) {
