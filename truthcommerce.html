@@ -603,100 +603,251 @@
 
 
     /* =========================================
-
-   4. SMART HEADER (Glassmorphism)
-
-========================================= */
+       4. HEADER — INNOFLOW STYLE (fixed bar)
+    ========================================= */
 
     .header {
-      position: fixed;
-      top: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 100;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      width: 90%;
-      max-width: 1000px;
-      display: flex;
-      justify-content: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: transparent;
+      border-bottom: none;
     }
 
-    .header.header-hidden {
-      transform: translate(-50%, -150%);
-    }
-
-
-
-    .nav-pill {
+    .header-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 5%;
+      height: 68px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 32px;
-      padding: 12px 16px 12px 32px;
-      border-radius: 999px;
-      background: rgba(10, 12, 16, 0.4);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 0.5px solid rgba(255, 255, 255, 0.15);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 10px 40px rgba(0, 0, 0, 0.5);
     }
 
+    /* Logo */
     .logo-link {
       display: flex;
       align-items: center;
-      margin-right: 16px;
+      flex-shrink: 0;
+      text-decoration: none;
     }
 
     .logo-header {
-      height: 32px;
+      height: 52px;
       width: auto;
-      transition: transform 0.3s ease;
+      transition: opacity 0.2s ease;
     }
 
     .logo-link:hover .logo-header {
-      transform: scale(1.05);
+      opacity: 0.8;
     }
 
+    /* Nav links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
 
-
-    .nav-pill a:not(.logo-link) {
+    .nav-links a {
       text-decoration: none;
-      color: var(--text-muted);
-      font-family: 'Sora', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      transition: color 0.2s;
+      color: rgba(255, 255, 255, 0.65);
+      font-family: 'Inter', sans-serif;
+      font-size: 13.5px;
+      font-weight: 500;
+      letter-spacing: 0;
+      transition: color 0.2s ease;
+      white-space: nowrap;
     }
 
-    .nav-pill a:hover:not(.logo-link) {
+    .nav-links a:hover {
       color: #fff;
     }
 
+    /* Header actions */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    /* CTA button */
     .nav-cta {
-      background: var(--text-main) !important;
-      color: var(--bg-base) !important;
-      padding: 12px 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 22px;
       border-radius: 999px;
-      font-weight: 700 !important;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+      white-space: nowrap;
     }
 
     .nav-cta:hover {
-      background: var(--green) !important;
-      box-shadow: 0 0 20px rgba(7, 221, 43, 0.3);
+      background: #fff;
+      color: #000;
+      border-color: #fff;
     }
 
+    .nav-cta .arrow {
+      font-style: normal;
+      transition: transform 0.25s ease;
+    }
 
+    .nav-cta:hover .arrow {
+      transform: translateX(3px);
+    }
 
-    @media (max-width: 768px) {
-      .nav-pill a:not(.nav-cta):not(.logo-link) {
+    /* Hamburger (mobile only) */
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px;
+      height: 36px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .menu-toggle span {
+      display: block;
+      height: 1.5px;
+      width: 100%;
+      background: #fff;
+      border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.2s ease;
+    }
+
+    /* Mobile overlay — Innoflow style */
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1001; /* above header (1000) */
+      background: #000;
+      flex-direction: column;
+    }
+
+    .mobile-overlay.is-open {
+      display: flex;
+    }
+
+    /* Top bar inside overlay: logo left, X right */
+    .mobile-overlay-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6%;
+      height: 68px;
+      flex-shrink: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .mobile-overlay-logo {
+      height: 44px;
+      width: auto;
+    }
+
+    .mobile-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 4px 8px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+
+    .mobile-close:hover {
+      opacity: 1;
+    }
+
+    /* Nav links inside overlay */
+    .mobile-overlay-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 8%;
+    }
+
+    .mobile-overlay-nav a {
+      display: block;
+      text-decoration: none;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(1.6rem, 6vw, 2.4rem);
+      font-weight: 500;
+      line-height: 1;
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      transition: color 0.2s ease;
+    }
+
+    .mobile-overlay-nav a:hover {
+      color: var(--green);
+    }
+
+    /* CTA at the bottom */
+    .mobile-overlay-footer {
+      padding: 28px 8%;
+      flex-shrink: 0;
+    }
+
+    .mobile-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 14px 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      transition: background 0.25s, border-color 0.25s, color 0.25s;
+    }
+
+    .mobile-cta:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    @media (max-width: 860px) {
+      .nav-links {
         display: none;
       }
 
-      .nav-pill {
-        gap: 16px;
-        padding: 8px 12px 8px 24px;
+      .header-actions .nav-cta {
+        display: none;
       }
+
+      .menu-toggle {
+        display: flex;
+      }
+    }
+
+    /* Push content down so hero doesn't hide behind fixed header */
+    .hero-wrapper {
+      padding-top: calc(68px + 80px);
     }
 
 
@@ -755,7 +906,7 @@
       align-items: center;
       justify-content: center;
       position: relative;
-      padding-top: 80px;
+      padding-top: 120px;
       overflow: visible;
       z-index: 20;
     }
@@ -1732,6 +1883,114 @@
 
 ========================================= */
 
+    /* =========================================
+       MOBILE STACKING CARDS (Innoflow Style)
+    ========================================= */
+
+    .mobile-only {
+      display: none;
+    }
+
+    .desktop-only {
+      display: flex;
+    }
+
+    .stacking-cards-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 40px 5%;
+      padding-bottom: 50vh;
+      display: none; /* Hidden on desktop via .mobile-only logic applied above, but enforced by media query */
+      flex-direction: column;
+      position: relative;
+    }
+
+    .mobile-stacking-card {
+      position: sticky;
+      top: 100px; /* Adjust based on mobile header height */
+      height: 50vh;
+      width: 100%;
+      /* We don't need huge margins between cards anymore because the 
+         cards are sticky, they just need to be positioned within a long container */
+      margin-bottom: 20px; 
+      border-radius: 32px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background-color: #000;
+      text-decoration: none;
+      transform-origin: top center;
+      will-change: transform, opacity;
+      /* Box shadow helps separate cards when stacked */
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+    }
+    
+    .mobile-stacking-card .stack-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .mobile-stacking-card .stack-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.4) 100%);
+      z-index: 1;
+      transition: background-color 0.3s ease;
+    }
+
+    .mobile-stacking-card .stack-content {
+      position: relative;
+      z-index: 2;
+      padding: 40px 32px;
+      text-align: left;
+    }
+
+    .mobile-stacking-card .stack-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .mobile-stacking-card .stack-title {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(2.2rem, 8vw, 3rem);
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #fff;
+      margin: 0;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    /* Toggle visibility on mobile / tablet */
+    @media (max-width: 1024px) {
+      .desktop-only {
+        display: none !important;
+      }
+      .mobile-only {
+        display: flex !important;
+      }
+      
+      #projetos {
+        padding-top: 80px;
+        padding-bottom: 0 !important;
+      }
+
+      #depoimentos {
+        padding-top: 40px !important;
+      }
+    }
+
     /* MODIFICAÇÃO: Removido scroll-x auto para que os cards quebrem a linha (wrap) e fiquem centralizados. Ninguém será cortado. */
 
     /* =========================================
@@ -2167,8 +2426,8 @@
     .marquee-item img {
       height: 32px;
       width: auto;
-      filter: grayscale(1) brightness(200%);
-      opacity: 0.4;
+      /* filter: grayscale(1) brightness(200%);
+      opacity: 0.4; */
       transition: all 0.4s ease;
     }
 
@@ -2702,26 +2961,61 @@
 
 
   <header class="header">
+    <div class="header-container">
 
-    <div class="nav-pill">
-
+      <!-- LOGO -->
       <a href="#" class="logo-link">
-
         <img src="Logo Branca.png" alt="Truth Commerce" class="logo-header">
-
       </a>
 
-      <a href="#metodo">Metodologia</a>
+      <!-- NAV LINKS -->
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#metodo">Metodologia</a></li>
+          <li><a href="#projetos">Infraestrutura Ativa</a></li>
+          <li><a href="#faq">Perguntas Frequentes</a></li>
+        </ul>
+      </nav>
 
-      <a href="#projetos">Infraestrutura Ativa</a>
-
-      <a href="#faq">Perguntas Frequentes</a>
-
-      <a href="https://wa.me/SEUNUMEROAQUI" target="_blank" class="nav-cta">Avaliar Estrutura</a>
+      <!-- ACTIONS -->
+      <div class="header-actions">
+        <a href="https://wa.me/SEUNUMEROAQUI" target="_blank" class="nav-cta">
+          Avaliar Estrutura <span class="arrow">&rarr;</span>
+        </a>
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
 
     </div>
-
   </header>
+
+  <!-- MOBILE OVERLAY -->
+  <div class="mobile-overlay" id="mobileOverlay">
+
+    <!-- Top bar: logo + close -->
+    <div class="mobile-overlay-top">
+      <img src="Logo Branca.png" alt="Truth Commerce" class="mobile-overlay-logo">
+      <button class="mobile-close" id="menuClose" aria-label="Fechar menu">&times;</button>
+    </div>
+
+    <!-- Nav links -->
+    <nav class="mobile-overlay-nav">
+      <a href="#metodo" class="mobile-link">Metodologia</a>
+      <a href="#projetos" class="mobile-link">Infraestrutura Ativa</a>
+      <a href="#faq" class="mobile-link">Perguntas Frequentes</a>
+    </nav>
+
+    <!-- Footer CTA -->
+    <div class="mobile-overlay-footer">
+      <a href="https://wa.me/SEUNUMEROAQUI" target="_blank" class="mobile-cta mobile-link">
+        Avaliar Estrutura <span>&rarr;</span>
+      </a>
+    </div>
+
+  </div>
 
 
 
@@ -2908,14 +3202,6 @@
 
 
 
-      <div class="text-center reveal" style="margin-top: 80px;">
-
-        <p class="cta-pre-text">Pronto para estabilizar seus sistemas?</p>
-
-        <a href="https://wa.me/SEUNUMEROAQUI" target="_blank" class="btn primary">Ver estrutura completa</a>
-
-      </div>
-
     </div>
 
   </section>
@@ -2943,7 +3229,7 @@
         <div class="marquee-item"><img src="Bling_logo.svg" alt="Bling"></div>
         <div class="marquee-item"><img src="Nuvemshop-logo.png" alt="Nuvemshop" style="height:44px"></div>
         <div class="marquee-item"><img src="Shopee_logo.svg" alt="Shopee" style="height:44px"></div>
-        <div class="marquee-item"><img src="magalu-logo.svg" alt="Magalu" style="height:50px"></div>
+        <div class="marquee-item"><img src="magalu-logo.svg" alt="Magalu" style="height:90px"></div>
         <div class="marquee-item"><img src="tiktokshop_logo.svg" alt="TikTok Shop"></div>
           <!-- Set 3 — duplicate for seamless loop -->
         <div class="marquee-item"><img src="Amazon_logo.svg" alt="Amazon"></div>
@@ -2952,7 +3238,7 @@
         <div class="marquee-item"><img src="Bling_logo.svg" alt="Bling"></div>
         <div class="marquee-item"><img src="Nuvemshop-logo.png" alt="Nuvemshop" style="height:44px"></div>
         <div class="marquee-item"><img src="Shopee_logo.svg" alt="Shopee" style="height:44px"></div>
-        <div class="marquee-item"><img src="magalu-logo.svg" alt="Magalu" style="height:50px"></div>
+        <div class="marquee-item"><img src="magalu-logo.svg" alt="Magalu" style="height:90px"></div>
         <div class="marquee-item"><img src="tiktokshop_logo.svg" alt="TikTok Shop"></div>
       </div>
     </div>
@@ -3132,7 +3418,7 @@
 
 
 
-    <div class="carousel-container reveal">
+    <div class="carousel-container reveal desktop-only">
 
       <div class="carousel">
 
@@ -3300,15 +3586,47 @@
 
     </div>
 
+    <!-- MOBILIE ONLY: STACKING CARDS -->
+    <div class="stacking-cards-container mobile-only reveal">
 
+      <a href="https://www.sopy.com.br/" target="_blank" class="mobile-stacking-card card-1" style="z-index: 1;">
+        <video loop muted playsinline class="stack-video" src="sopy.mp4" poster="sopy-print.png"></video>
+        <div class="stack-overlay"></div>
+        <div class="stack-content">
+          <div class="stack-tag">Sopy</div>
+          <h3 class="stack-title">Nuvemshop</h3>
+        </div>
+      </a>
 
-    <div class="text-center reveal" style="margin-top: 32px;">
+      <a href="https://mpdistribuidorars.com.br/" target="_blank" class="mobile-stacking-card card-2" style="z-index: 2;">
+        <video loop muted playsinline class="stack-video" src="mp.mp4" poster="mp-print.png"></video>
+        <div class="stack-overlay"></div>
+        <div class="stack-content">
+          <div class="stack-tag">MP Distribuidora</div>
+          <h3 class="stack-title">Shopify</h3>
+        </div>
+      </a>
 
-      <p class="cta-pre-text">Sua operação pode ser a próxima a escalar.</p>
+      <a href="https://nexteventosbrasil.com/" target="_blank" class="mobile-stacking-card card-3" style="z-index: 3;">
+        <video loop muted playsinline class="stack-video" src="next.mp4" poster="next-print.png"></video>
+        <div class="stack-overlay"></div>
+        <div class="stack-content">
+          <div class="stack-tag">Next Eventos</div>
+          <h3 class="stack-title">Nativo</h3>
+        </div>
+      </a>
 
-      <a href="https://wa.me/SEUNUMEROAQUI" target="_blank" class="btn primary">Conhecer abordagem</a>
+      <a href="https://johnnycooker.com.br/" target="_blank" class="mobile-stacking-card card-4" style="z-index: 4;">
+        <video loop muted playsinline class="stack-video" src="johny.mp4" poster="johny-print.png"></video>
+        <div class="stack-overlay"></div>
+        <div class="stack-content">
+          <div class="stack-tag">Johnny Cooker</div>
+          <h3 class="stack-title">Setup</h3>
+        </div>
+      </a>
 
     </div>
+
 
   </section>
 
@@ -3819,27 +4137,31 @@
     })();
 
 
-    /* LÓGICA DO SMART HEADER */
+    /* MOBILE MENU LOGIC */
+    (function () {
+      const toggle = document.getElementById('menuToggle');
+      const overlay = document.getElementById('mobileOverlay');
+      const close = document.getElementById('menuClose');
+      const mobileLinks = overlay ? overlay.querySelectorAll('.mobile-link, .mobile-cta') : [];
 
-    let lastScrollTop = 0;
+      function openMenu() {
+        if (overlay) overlay.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      }
 
-    const mainHeader = document.querySelector('.header');
+      function closeMenu() {
+        if (overlay) overlay.classList.remove('is-open');
+        document.body.style.overflow = '';
+      }
 
-    window.addEventListener('scroll', () => {
+      if (toggle) toggle.addEventListener('click', openMenu);
+      if (close) close.addEventListener('click', closeMenu);
 
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      mobileLinks.forEach(function (link) {
+        link.addEventListener('click', closeMenu);
+      });
+    })();
 
-      if (scrollTop > lastScrollTop && scrollTop > 100) { mainHeader.classList.add('header-hidden'); }
-
-      else { mainHeader.classList.remove('header-hidden'); }
-
-      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-
-    });
-
-
-
-    /* PARALLAX DO FOGUETE — DESATIVADO (agora usa position:fixed + ScrollTrigger morph) */
 
   </script>
 
@@ -4567,6 +4889,42 @@
                 }
               }
             );
+
+            // MOBILE ONLY: STACKING CARDS SCROLLTRIGGER
+            if (isMobile) {
+              const mobileCards = gsap.utils.toArray('.mobile-stacking-card');
+              const container = document.querySelector('.stacking-cards-container');
+              
+              mobileCards.forEach((card, index) => {
+                if (index === mobileCards.length - 1) return;
+
+                const overlay = card.querySelector('.stack-overlay');
+                
+                // Animação de escala do card
+                gsap.to(card, {
+                  scale: 0.92,
+                  ease: "none",
+                  scrollTrigger: {
+                    trigger: container,
+                    start: `top top-=${index * 50}vh`,
+                    end: `top top-=${(index + 1) * 50}vh`,
+                    scrub: true
+                  }
+                });
+
+                // Escurecimento do overlay
+                gsap.to(overlay, {
+                  backgroundColor: "rgba(0,0,0,0.8)",
+                  ease: "none",
+                  scrollTrigger: {
+                    trigger: container,
+                    start: `top top-=${index * 50}vh`,
+                    end: `top top-=${(index + 1) * 50}vh`,
+                    scrub: true
+                  }
+                });
+              });
+            }
 
             return function () {
               // Cleanup when resizing across breakpoints
