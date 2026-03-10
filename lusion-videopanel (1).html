@@ -91,6 +91,7 @@
   .nav-btn:hover { transform: scale(1.1); }
   .nav-btn.active { background: #fff; color: #111; }
   .nav-btn.inactive { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.3); pointer-events: none; }
+  #hud {
     position:fixed;bottom:24px;right:24px;z-index:99;
     background:rgba(255,255,255,0.9);
     backdrop-filter:blur(12px);
@@ -103,11 +104,11 @@
   #hud .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
   #hud .val{color:#4a7bff;font-weight:700}
   #hud input[type=range]{
-    -webkit-appearance:none;width:100%;height:3px;
+    -webkit-appearance:none;appearance:none;width:100%;height:3px;
     background:#ddd;border-radius:2px;margin-bottom:14px;outline:none;cursor:pointer;
   }
   #hud input[type=range]::-webkit-slider-thumb{
-    -webkit-appearance:none;width:14px;height:14px;
+    -webkit-appearance:none;appearance:none;width:14px;height:14px;
     background:#4a7bff;border-radius:50%;
   }
   #hud .btn{
@@ -502,10 +503,13 @@ function calcScrollPositions() {
 // ── Scroll handler ────────────────────────────────────────────────────────
 let targetProgress = 0;
 let currentProgress = 0;
-const LERP_SPEED = 0.07;
+const LERP_SPEED = 0.1;
 let autoScrollRAF = null;
 let userScrolling = false;
 let userScrollTimer = null;
+let scrollbarIdleTimer = null;
+let lastScrollY = window.scrollY || 0;
+let scrollDirection = 1;
 
 function stopAutoScroll() {
   if (autoScrollRAF) { cancelAnimationFrame(autoScrollRAF); autoScrollRAF = null; }
@@ -513,7 +517,7 @@ function stopAutoScroll() {
 
 function autoScrollTo(destY) {
   stopAutoScroll();
-  const DURATION = 1800;
+  const DURATION = 1800; // Snappy transition (1.2s)
   const startY = window.scrollY;
   const startTime = performance.now();
 
@@ -528,15 +532,19 @@ function autoScrollTo(destY) {
   autoScrollRAF = requestAnimationFrame(step);
 }
 
-// Detect user intent to scroll — only cancel if auto-scroll already running
+// Detect user intent to scroll (trackpad, touch, keyboard)
 function onUserScrollIntent() {
-  if (autoScrollRAF) {
-    stopAutoScroll();
-    userScrolling = true;
-    clearTimeout(userScrollTimer);
-    userScrollTimer = setTimeout(() => { userScrolling = false; }, 400);
-  }
+  if (autoScrollRAF) stopAutoScroll();
+  
+  userScrolling = true;
+  clearTimeout(userScrollTimer);
+  // Wait for 150ms of inactivity to consider the input stream "done"
+  userScrollTimer = setTimeout(() => { 
+    userScrolling = false; 
+    checkSnapOnIdle();
+  }, 150);
 }
+
 window.addEventListener('wheel',      onUserScrollIntent, { passive: true });
 window.addEventListener('touchmove',  onUserScrollIntent, { passive: true });
 window.addEventListener('touchstart', onUserScrollIntent, { passive: true });
@@ -544,7 +552,22 @@ window.addEventListener('keydown', e => {
   if ([' ','ArrowDown','ArrowUp','PageDown','PageUp'].includes(e.key)) onUserScrollIntent();
 }, { passive: true });
 
-let wasSnapped = false; // tracks if we completed the forward snap
+function checkSnapOnIdle() {
+  if (autoScrollRAF) return; // already animating
+
+  // Only consider snapping if we're technically inside the transition heights
+  if (window.scrollY > scrollAnimStart && window.scrollY < scrollAnimEnd) {
+    const rawProgress = THREE.MathUtils.inverseLerp(scrollAnimStart, scrollAnimEnd, window.scrollY);
+    
+    if (scrollDirection === 1) { // User was scrolling DOWN
+      if (rawProgress > 0.05) autoScrollTo(scrollAnimEnd);
+      else autoScrollTo(scrollAnimStart);
+    } else { // User was scrolling UP
+      if (rawProgress < 0.95) autoScrollTo(scrollAnimStart);
+      else autoScrollTo(scrollAnimEnd);
+    }
+  }
+}
 
 function onScroll() {
   const rawProgress = THREE.MathUtils.clamp(
@@ -553,24 +576,20 @@ function onScroll() {
   recalcRects();
   targetProgress = rawProgress;
 
-  // Forward: past 10% → auto-scroll to end
-  if (!wasSnapped && rawProgress > 0.1 && rawProgress < 0.99 && !autoScrollRAF) {
-    wasSnapped = true;
-    autoScrollTo(scrollAnimEnd);
-  }
+  // Track the direction of real user scrolls
+  if (window.scrollY > lastScrollY) scrollDirection = 1;
+  else if (window.scrollY < lastScrollY) scrollDirection = -1;
+  lastScrollY = window.scrollY;
 
-  // Reverse: only if we previously snapped forward and user scrolled back below 90%
-  if (wasSnapped && rawProgress < 0.9 && !autoScrollRAF) {
-    wasSnapped = false;
-    autoScrollTo(scrollAnimStart);
-  }
-
-  // Reset state when fully back at start
-  if (rawProgress === 0) wasSnapped = false;
-
-  // HUD
+  // Update HUD
   document.getElementById('v-ap').textContent = rawProgress.toFixed(2);
   document.getElementById('s-ap').value       = rawProgress * 100;
+
+  // Catch dragging the scrollbar (which doesn't fire wheel/touch events)
+  clearTimeout(scrollbarIdleTimer);
+  scrollbarIdleTimer = setTimeout(() => {
+    if (!userScrolling) { checkSnapOnIdle(); }
+  }, 200);
 }
 
 window.addEventListener('scroll', onScroll, { passive: true });
