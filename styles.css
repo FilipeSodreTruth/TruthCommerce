@@ -2638,7 +2638,7 @@ img.ceo-cutout {
 /* =========================================
        PROTOCOLO DE TRANSIÇÃO DIGITAL
     ========================================= */
-/* #transicao {
+#transicao {
   position: relative;
   z-index: 10;
   padding: 140px 5%;
@@ -2703,7 +2703,7 @@ img.ceo-cutout {
 }
 
 /* GSAP Active state for glow */
-/* .bento-item.is-active .bento-icon {
+.bento-item.is-active .bento-icon {
   background: rgba(7, 221, 43, 0.1);
   border-color: rgba(7, 221, 43, 0.4);
   box-shadow: 0 0 20px rgba(7, 221, 43, 0.2);
@@ -2739,12 +2739,12 @@ img.ceo-cutout {
   background: var(--green);
   box-shadow: 0 10px 40px rgba(7, 221, 43, 0.3);
   transform: scale(1.02);
-} */
+}
 
 /* =========================================
        DIAGNOSTIC CHECKLIST SECTION
     ========================================= */
-/* #diagnostico {
+#diagnostico {
   position: relative;
   z-index: 10;
   padding: 140px 5%;
@@ -2875,8 +2875,7 @@ img.ceo-cutout {
 .btn-diag:hover {
   transform: translateY(-3px) scale(1.02);
   box-shadow: 0 0 60px rgba(7, 221, 43, 0.45);
-} */
-
+}
 
 /* =========================================
        MODIFICAÇÃO: margin-top: 0 para o footer não deixar buraco com o FAQ. */
@@ -3013,11 +3012,13 @@ img.ceo-cutout {
 
 /* ── SHOWREEL (Lusion-style sticky scroll) ─────────────────────────── */
 .dep-hero-section {
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 80px 5%;
+  justify-content: flex-end;
+  padding-bottom: 10vh;
 }
 
 #showreel-section {
