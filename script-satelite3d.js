@@ -98,35 +98,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const serviceItems = document.querySelectorAll('.service-item');
   const serviceImg = document.getElementById('service-img');
 
-  // Initial State: First item active by default
-  if (serviceItems.length > 0 && serviceImg) {
-    const firstItem = serviceItems[0];
-    firstItem.classList.add('active');
-    serviceImg.src = firstItem.getAttribute('data-img');
-    serviceImg.style.opacity = '1';
-  }
-
   serviceItems.forEach(item => {
     item.addEventListener('mouseenter', () => {
       serviceItems.forEach(el => el.classList.remove('active'));
       item.classList.add('active');
       if (serviceImg) {
         const newSrc = item.getAttribute('data-img');
-        if (newSrc && serviceImg.src !== newSrc) {
-          // Smooth transition for image swap
-          gsap.to(serviceImg, {
-            opacity: 0, duration: 0.2, onComplete: () => {
-              serviceImg.src = newSrc;
-              gsap.to(serviceImg, { opacity: 1, duration: 0.3 });
-            }
-          });
+        if (newSrc) {
+          serviceImg.style.opacity = '1';
+          serviceImg.src = newSrc;
         }
       }
     });
 
     item.addEventListener('mouseleave', () => {
-      // Keep it active or the user can choose. 
-      // User requested the first one visible on load, usually implies we stay on the current one.
+      item.classList.remove('active');
+      if (serviceImg) {
+        serviceImg.style.opacity = '0';
+      }
     });
   });
 
@@ -320,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
 
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio));
 
   renderer.setSize(W, H);
 
@@ -1183,7 +1172,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 // ── CARROSSEL 3D — código EXATO do CARROUSEL.HTML ───────────────────────
-window.addEventListener('load', function () {
+document.addEventListener('DOMContentLoaded', function () {
   gsap.registerPlugin(ScrollTrigger);
 
   const canvas = document.getElementById('canvas-webgl');
@@ -1198,6 +1187,13 @@ window.addEventListener('load', function () {
 
   const carouselGroup = new THREE.Group();
   scene.add(carouselGroup);
+
+  // ── LIGHTING (Needed for normal 3D models) ──
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
+  scene.add(ambientLight);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  dirLight.position.set(2000, 5000, 2000);
+  scene.add(dirLight);
 
   const radius = 3500;
   const cardW = 1100;
@@ -1260,181 +1256,29 @@ window.addEventListener('load', function () {
     meshes.push(mesh);
   });
 
-  // ── SATELLITE PARTICLE CLOUD (center of ring) ─────────────────────────
-  var SAT_N = 20000;
+  // ── SATELLITE MESH (center of ring) ─────────────────────────
   var satelliteGroup = new THREE.Group();
   satelliteGroup.renderOrder = -1; // Render behind cards
   scene.add(satelliteGroup);
-  var satCloudReady = false;
-  var satVelocities = null;
-  var satBasePositions = null;
-  var satScatterNoise = null;
-
-  // Glow sprite texture
-  var satCS = 512;
-  var satCV = document.createElement('canvas');
-  satCV.width = satCV.height = satCS;
-  var satCtx = satCV.getContext('2d');
-  var satGrd = satCtx.createRadialGradient(satCS / 2, satCS / 2, 0, satCS / 2, satCS / 2, satCS / 2);
-  satGrd.addColorStop(0.0, 'rgba(255,255,255,1)');
-  satGrd.addColorStop(0.15, 'rgba(255,255,255,0.9)');
-  satGrd.addColorStop(0.4, 'rgba(255,255,255,0.3)');
-  satGrd.addColorStop(1.0, 'rgba(0,0,0,0)');
-  satCtx.fillStyle = satGrd;
-  satCtx.fillRect(0, 0, satCS, satCS);
-  var satGlowTex = new THREE.CanvasTexture(satCV);
-  satGlowTex.minFilter = THREE.LinearMipMapLinearFilter;
-
-  var satGreen = new THREE.Color('#07dd2b');
-  var satTemp = new THREE.Color();
-
-  function extractSatelliteData(gltf) {
-    var triangles = [];
-    var totalArea = 0;
-    var minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9, minZ = 1e9, maxZ = -1e9;
-
-    gltf.scene.updateMatrixWorld(true);
-    gltf.scene.traverse(function (child) {
-      if (!child.isMesh || !child.geometry) return;
-      var geo = child.geometry.clone();
-      geo.applyMatrix4(child.matrixWorld);
-      if (geo.index) geo = geo.toNonIndexed();
-      var pos = geo.attributes.position;
-      if (!pos || pos.count < 3) return;
-
-      geo.computeBoundingBox();
-      var bb = geo.boundingBox;
-      var extX = bb.max.x - bb.min.x;
-      var extY = bb.max.y - bb.min.y;
-      var extZ = bb.max.z - bb.min.z;
-      var maxHoriz = Math.max(extX, extZ);
-
-      var meshName = child.name || '';
-      if (maxHoriz > 50 || extY > 50) return;
-      if (meshName.includes('Text') || meshName.includes('Backdrop') || meshName.includes('Side')) return;
-
-      for (var i = 0; i < pos.count; i += 3) {
-        var ax = pos.getX(i), ay = pos.getY(i), az = pos.getZ(i);
-        var bx = pos.getX(i + 1), by = pos.getY(i + 1), bz = pos.getZ(i + 1);
-        var cx = pos.getX(i + 2), cy = pos.getY(i + 2), cz = pos.getZ(i + 2);
-
-        var abx = bx - ax, aby = by - ay, abz = bz - az;
-        var acx = cx - ax, acy = cy - ay, acz = cz - az;
-        var crossX = aby * acz - abz * acy;
-        var crossY = abz * acx - abx * acz;
-        var crossZ = abx * acy - aby * acx;
-        var area = Math.sqrt(crossX * crossX + crossY * crossY + crossZ * crossZ) * 0.5;
-
-        if (area > 0.00001) {
-          triangles.push([ax, ay, az, bx, by, bz, cx, cy, cz, area]);
-          totalArea += area;
-          if (ax < minX) minX = ax; if (bx < minX) minX = bx; if (cx < minX) minX = cx;
-          if (ax > maxX) maxX = ax; if (bx > maxX) maxX = bx; if (cx > maxX) maxX = cx;
-          if (ay < minY) minY = ay; if (by < minY) minY = by; if (cy < minY) minY = cy;
-          if (ay > maxY) maxY = ay; if (by > maxY) maxY = by; if (cy > maxY) maxY = cy;
-          if (az < minZ) minZ = az; if (bz < minZ) minZ = bz; if (cz < minZ) minZ = cz;
-          if (az > maxZ) maxZ = az; if (bz > maxZ) maxZ = bz; if (cz > maxZ) maxZ = cz;
-        }
-      }
-    });
-
-    if (triangles.length === 0) { console.error('No triangles in satellite model.'); return null; }
-    console.log('[satellite] Triangles:', triangles.length, '| Area:', totalArea.toFixed(2));
-
-    var sizeY = maxY - minY || 1;
-    var cenX = (maxX + minX) / 2, cenY = (maxY + minY) / 2, cenZ = (maxZ + minZ) / 2;
-    var scale = 1500 / sizeY; // Scale to ~1500 units for a larger satellite inside the ring
-
-    var positions = new Float32Array(SAT_N * 3);
-    var colors = new Float32Array(SAT_N * 3);
-
-    var cdf = new Float32Array(triangles.length);
-    var runSum = 0;
-    for (var k = 0; k < triangles.length; k++) {
-      runSum += triangles[k][9];
-      cdf[k] = runSum;
-    }
-
-    for (var i = 0; i < SAT_N; i++) {
-      var rnd = Math.random() * totalArea;
-      var lo = 0, hi = triangles.length - 1;
-      while (lo < hi) {
-        var mid = (lo + hi) >> 1;
-        if (cdf[mid] < rnd) lo = mid + 1; else hi = mid;
-      }
-      var t = triangles[lo];
-      var r1 = Math.random(), r2 = Math.random();
-      if (r1 + r2 > 1) { r1 = 1 - r1; r2 = 1 - r2; }
-
-      var px = (t[0] + r1 * (t[3] - t[0]) + r2 * (t[6] - t[0]) - cenX) * scale;
-      var py = (t[1] + r1 * (t[4] - t[1]) + r2 * (t[7] - t[1]) - cenY) * scale;
-      var pz = (t[2] + r1 * (t[5] - t[2]) + r2 * (t[8] - t[2]) - cenZ) * scale;
-
-      positions[i * 3] = px;
-      positions[i * 3 + 1] = py;
-      positions[i * 3 + 2] = pz;
-
-      // Color: white/silver body with sporadic green accents
-      var noise = Math.sin(i * 12.9898 + 78.233) * 0.5 + 0.5;
-      if (noise > 0.85) {
-        satTemp.copy(satGreen);
-        var sp = 0.6 + Math.random() * 0.4;
-        colors[i * 3] = satTemp.r * sp;
-        colors[i * 3 + 1] = satTemp.g * sp;
-        colors[i * 3 + 2] = satTemp.b * sp;
-      } else {
-        var sp = 0.85 + Math.random() * 0.15;
-        colors[i * 3] = sp;
-        colors[i * 3 + 1] = sp;
-        colors[i * 3 + 2] = sp;
-      }
-    }
-
-    return { positions: positions, colors: colors };
-  }
+  var satelliteMesh = null;
 
   // Load satellite model
   var satLoader = new THREE.GLTFLoader();
   satLoader.load('satelite.glb', function (gltf) {
-    var satData = extractSatelliteData(gltf);
-    if (!satData) return;
+    satelliteMesh = gltf.scene;
+    satelliteMesh.scale.set(350, 350, 350); // Adjust size as needed
+    satelliteMesh.position.set(0, -450, 50);
 
-    var satGeo = new THREE.BufferGeometry();
-    var satPositions = new Float32Array(satData.positions);
-    satGeo.setAttribute('position', new THREE.BufferAttribute(satPositions, 3));
-    satGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(satData.colors), 3));
-
-    var satMat = new THREE.PointsMaterial({
-      size: 20,
-      map: satGlowTex,
-      vertexColors: true,
-      transparent: true,
-      opacity: 1,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-      depthTest: true,
-      sizeAttenuation: true
+    // Ensure material supports transparency for fade effect
+    satelliteMesh.traverse(function (child) {
+      if (child.isMesh) {
+        child.material.transparent = true;
+        child.material.opacity = 1;
+      }
     });
 
-    satelliteGroup.add(new THREE.Points(satGeo, satMat));
-
-    // Store base positions and init drift velocities
-    satBasePositions = new Float32Array(satData.positions);
-    satVelocities = new Float32Array(SAT_N * 3);
-    for (var v = 0; v < SAT_N * 3; v++) {
-      satVelocities[v] = (Math.random() - 0.5) * 0.8;
-    }
-
-    // Precompute scatter noise (deterministic per particle, like rocket morph)
-    satScatterNoise = new Float32Array(SAT_N * 3);
-    for (var sn = 0; sn < SAT_N; sn++) {
-      satScatterNoise[sn * 3] = Math.sin(sn * 1234.5678) * 2.0 - 1.0;
-      satScatterNoise[sn * 3 + 1] = Math.cos(sn * 2345.6789) * 2.0 - 1.0;
-      satScatterNoise[sn * 3 + 2] = Math.sin(sn * 3456.7890 + 1.23) * 2.0 - 1.0;
-    }
-
-    satCloudReady = true;
-    console.log('Satellite particle cloud loaded:', SAT_N, 'points');
+    satelliteGroup.add(satelliteMesh);
+    console.log('Satellite normal mesh loaded.');
   }, undefined, function (err) {
     console.error('Failed to load satelite.glb:', err);
   });
@@ -1590,69 +1434,22 @@ window.addEventListener('load', function () {
       hoveredMesh = null;
     }
 
-    // ── SATELLITE: scatter + rotation + drift + mouse repulsion ──
-    if (satCloudReady && satelliteGroup.children.length > 0) {
-      var satPoints = satelliteGroup.children[0];
-      var satMaterial = satPoints.material;
-
-      // Scatter strength driven by hudOpacity (0=formed, 1=fully scattered)
-      var satScatter = camProxy.hudOpacity * satScatterStrength;
-
-      // Fade opacity slightly at full scatter so particles dissolve
-      var satOpacity = 1.0 - Math.max(0, (camProxy.hudOpacity - 0.6) * 2.5);
-      satMaterial.opacity = Math.max(0, satOpacity);
-
+    // ── SATELLITE: mesh animation & fade-out ──
+    if (satelliteMesh) {
       // Slow idle rotation
       satelliteGroup.rotation.y += 0.002;
       satelliteGroup.rotation.x = 0.15;
 
-      // Mouse repulsion: convert mouse to satellite local space
-      satMouseActive = false;
-      if (camProxy.hudOpacity < 0.5) {
-        satRaycaster.setFromCamera(mouse, camera);
-        if (satRaycaster.ray.intersectPlane(satMousePlane, satPlaneHit)) {
-          satelliteGroup.updateMatrixWorld();
-          satInverseMatrix.copy(satelliteGroup.matrixWorld).invert();
-          satLocalMouse.copy(satPlaneHit).applyMatrix4(satInverseMatrix);
-          satMouseActive = true;
+      // Fade out as we zoom in (hudOpacity increases)
+      // Zoom out (hudOpacity=0) -> opacity=1
+      // Zoom in (hudOpacity=1) -> opacity=0
+      var satOpacity = 1.0 - camProxy.hudOpacity;
+      satelliteMesh.traverse(function (child) {
+        if (child.isMesh) {
+          child.material.opacity = Math.max(0, satOpacity);
+          child.visible = satOpacity > 0.001;
         }
-      }
-
-      // Per-particle: scatter + drift + mouse repulsion + spring return
-      var satPosAttr = satPoints.geometry.attributes.position;
-      var satArr = satPosAttr.array;
-      for (var si = 0; si < SAT_N; si++) {
-        var six = si * 3, siy = six + 1, siz = six + 2;
-
-        // Target position = base + scatter noise
-        var targetX = satBasePositions[six] + satScatterNoise[six] * satScatter;
-        var targetY = satBasePositions[siy] + satScatterNoise[siy] * satScatter;
-        var targetZ = satBasePositions[siz] + satScatterNoise[siz] * satScatter;
-
-        // Organic drift
-        satArr[six] += satVelocities[six];
-        satArr[siy] += satVelocities[siy];
-        satArr[siz] += satVelocities[siz];
-
-        // Mouse repulsion (2D: x, y)
-        if (satMouseActive) {
-          var mdx = satArr[six] - satLocalMouse.x;
-          var mdy = satArr[siy] - satLocalMouse.y;
-          var mdist = Math.sqrt(mdx * mdx + mdy * mdy);
-          if (mdist < satHoverRadius && mdist > 0.1) {
-            var mforce = (1.0 - mdist / satHoverRadius);
-            var minvDist = 1.0 / mdist;
-            satArr[six] += mdx * minvDist * mforce * satPushStrength;
-            satArr[siy] += mdy * minvDist * mforce * satPushStrength;
-          }
-        }
-
-        // Spring return to target (base + scatter)
-        satArr[six] += (targetX - satArr[six]) * satSpringK;
-        satArr[siy] += (targetY - satArr[siy]) * satSpringK;
-        satArr[siz] += (targetZ - satArr[siz]) * satSpringK;
-      }
-      satPosAttr.needsUpdate = true;
+      });
     }
 
     renderer.render(scene, camera);
@@ -1809,10 +1606,10 @@ document.addEventListener('DOMContentLoaded', function () {
   function calcScrollPositions() {
     var rect = sectionEl.getBoundingClientRect();
     var sectionTop = rect.top + window.scrollY;
-    // Early start: trigger when section enters viewport (50% offset)
-    scrollAnimStart = sectionTop - window.innerHeight * 0.5;
-    // Fast target: reach 100% progress very quickly
-    scrollAnimEnd = sectionTop + rect.height * 0.01;
+    // Aggressive start: trigger when section is 70% of viewport height from top
+    scrollAnimStart = sectionTop - window.innerHeight * 0.7;
+    // Aggressive end: complete expansion within 20% of section height
+    scrollAnimEnd = sectionTop + rect.height * 0.2;
   }
 
   var targetProgress = 0, currentProgress = 0;
@@ -1891,7 +1688,7 @@ document.addEventListener('DOMContentLoaded', function () {
     else if (window.scrollY < lastScrollY) scrollDirection = -1;
     lastScrollY = window.scrollY;
 
-    // Keep bounds updated for precision
+    // Recalculate every scroll for perfect precision
     calcScrollPositions();
 
     targetProgress = THREE.MathUtils.clamp(
@@ -1927,15 +1724,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function animate() {
     requestAnimationFrame(animate);
-    
-    // Constant speed approach: increment progress by a fixed step towards target
-    var diff = targetProgress - currentProgress;
-    var step = 0.012; // Adjusted for a consistent, smooth feel
-    if (Math.abs(diff) < step) {
-      currentProgress = targetProgress;
-    } else {
-      currentProgress += Math.sign(diff) * step;
-    }
+    currentProgress += (targetProgress - currentProgress) * 0.08;
     uniforms.animateProgress.value = currentProgress;
 
     // Fade out title/desc as video expands, fade in PLAY button when fully expanded

@@ -45,7 +45,7 @@ body {
 
   font-family: 'Inter', sans-serif;
 
-  background-color: var(--bg-base);
+  background-color: transparent;
 
   color: var(--text-main);
 
@@ -100,7 +100,7 @@ body::before {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -2;
+  z-index: -3;
   pointer-events: none;
   background-color: #000000;
   /* Pure Black */
@@ -113,7 +113,7 @@ body::before {
     radial-gradient(2.5px 2.5px at 200px 180px, #dddddd, rgba(0, 0, 0, 0));
   background-repeat: repeat;
   background-size: 250px 250px;
-  opacity: 0.5;
+  opacity: 1.0;
 }
 
 
@@ -1250,10 +1250,9 @@ section {
 }
 
 .galilee-card:hover {
-  transform: perspective(1000px) rotateX(4deg) rotateY(-4deg) scale3d(1.02, 1.02, 1.02);
   border-color: rgba(7, 221, 43, 0.4) !important;
   background: rgba(255, 255, 255, 0.06) !important;
-  box-shadow: -10px 20px 40px rgba(7, 221, 43, 0.12) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) !important;
 }
 
 
@@ -1431,11 +1430,14 @@ section {
 .services-img-wrapper {
   width: 100%;
   aspect-ratio: 3/4;
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
   background: #111;
-  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5);
   display: block;
+  pointer-events: none; /* Fixed flickering when mouse is near */
+  position: relative;
+  z-index: 10;
 }
 
 /* Mobile Services: Stacked Brutalist Layout */
@@ -1938,7 +1940,8 @@ section {
   letter-spacing: -0.02em;
 }
 
-Toggle visibility on mobile / tablet @media (max-width: 1024px) {
+/* Toggle visibility on mobile / tablet */
+@media (max-width: 1024px) {
   .desktop-only {
     display: none !important;
   }
@@ -1957,7 +1960,7 @@ Toggle visibility on mobile / tablet @media (max-width: 1024px) {
   }
 }
 
-END OLD CAROUSEL CSS */
+/* END OLD CAROUSEL CSS */
 
 /* =========================================
        8B. CARROSSEL 3D
@@ -2252,64 +2255,30 @@ END OLD CAROUSEL CSS */
 
 
 .faq-wrapper {
-
-  display: grid;
-
-  grid-template-columns: 1fr;
-
-  gap: 48px;
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
   width: 100%;
-
-  max-width: 1400px;
-
+  max-width: 900px;
   margin: 0 auto;
-
   padding: 0 clamp(24px, 4vw, 80px);
-
-  align-items: start;
-
 }
-
-@media (min-width: 900px) {
-
-  .faq-wrapper {
-
-    grid-template-columns: clamp(380px, 42vw, 680px) minmax(0, 1fr);
-
-    gap: clamp(40px, 6vw, 120px);
-
-  }
-
-}
-
-
 
 .faq-left-col {
-  justify-self: start;
-  transform: translateX(0);
+  width: 100%;
+  text-align: center;
 }
 
-
-
 .faq-header-title {
-
   font-family: 'Sora', sans-serif;
-
-  font-size: clamp(2.4rem, 5vw, 5rem);
-
+  font-size: clamp(2.4rem, 5vw, 4rem);
   font-weight: 600;
-
-  line-height: 1.0;
-
+  line-height: 1.1;
   letter-spacing: -0.03em;
-
   margin: 0;
-
   color: #FFFFFF;
-
-  max-width: 100%;
-
+  text-align: center;
 }
 
 .faq-list {
@@ -2502,8 +2471,8 @@ END OLD CAROUSEL CSS */
 .marquee-item img {
   height: 32px;
   width: auto;
-  /* filter: grayscale(1) brightness(200%);
-      opacity: 0.4; */
+  filter: grayscale(1) brightness(0) invert(1);
+  opacity: 0.5;
   transition: all 0.4s ease;
 }
 
@@ -3011,20 +2980,117 @@ img.ceo-cutout {
 }
 
 /* ── SHOWREEL (Lusion-style sticky scroll) ─────────────────────────── */
-.dep-hero-section {
-  height: 100vh;
+/* ── Showreel intro section (above the video) ── */
+.sr-intro-section {
+  position: relative;
+  padding: 5vh 5vw 0;
+  overflow: hidden;
+}
+
+.sr-intro-grid {
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
-  justify-content: flex-end;
-  padding-bottom: 10vh;
+  gap: 0;
+  width: 100%;
+  margin: 0;
+}
+
+/* ── Giant title block (top-left, full width) ── */
+.sr-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 100%;
+  /* Ensure it can span as far as needed */
+}
+
+.sr-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.sr-big-title {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: #fff;
+  margin: 0;
+}
+
+.sr-title-green {
+  color: var(--green);
+}
+
+/* ── Desc block (offset right, below title) ── */
+.sr-desc-block {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  align-items: flex-start;
+  margin-left: auto;
+  margin-right: 5vw;
+  /* Added margin-right to balance */
+  margin-top: 20px;
+  max-width: 440px;
+}
+
+.sr-desc-text {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.95rem, 1.3vw, 1.15rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.sr-cta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 100px;
+  padding: 12px 22px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #fff;
+  text-decoration: none;
+  transition: border-color 0.3s ease, background 0.3s ease;
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sr-cta-pill:hover {
+  border-color: var(--green);
+  background: rgba(7, 221, 43, 0.08);
+}
+
+.sr-cta-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .sr-title-block {
+    max-width: 100%;
+  }
+
+  .sr-desc-block {
+    margin-left: 0;
+    margin-top: 40px;
+  }
 }
 
 #showreel-section {
   position: relative;
   width: 100vw;
-  height: 180vh;
+  height: 120vh;
   margin: 0;
   padding: 0;
   z-index: 10;
@@ -3043,7 +3109,7 @@ img.ceo-cutout {
 
 #video-start-anchor {
   position: absolute;
-  top: 20vh;
+  top: 5vh;
   left: 5vw;
   width: 35vw;
   aspect-ratio: 16/9;
