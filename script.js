@@ -1293,6 +1293,7 @@ window.addEventListener('load', function () {
     var totalArea = 0;
     var minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9, minZ = 1e9, maxZ = -1e9;
 
+    gltf.scene.rotation.set(0, 91, 0);
     gltf.scene.updateMatrixWorld(true);
     gltf.scene.traverse(function (child) {
       if (!child.isMesh || !child.geometry) return;
@@ -1395,7 +1396,7 @@ window.addEventListener('load', function () {
 
   // Load satellite model
   var satLoader = new THREE.GLTFLoader();
-  satLoader.load('satelite.glb', function (gltf) {
+  satLoader.load('satellite.glb', function (gltf) {
     var satData = extractSatelliteData(gltf);
     if (!satData) return;
 
@@ -1422,7 +1423,7 @@ window.addEventListener('load', function () {
     satBasePositions = new Float32Array(satData.positions);
     satVelocities = new Float32Array(SAT_N * 3);
     for (var v = 0; v < SAT_N * 3; v++) {
-      satVelocities[v] = (Math.random() - 0.5) * 0.8;
+      satVelocities[v] = (Math.random() - 0.5) * 0.05; // Reduced from 0.8 to match hero scene proportions
     }
 
     // Precompute scatter noise (deterministic per particle, like rocket morph)
@@ -1440,11 +1441,11 @@ window.addEventListener('load', function () {
   });
 
   // ==========================================
-  // SATELLITE CONSTANTS
-  var satSpringK = 0.03;
-  var satScatterStrength = 1200; // How far particles scatter on zoom
-  var satHoverRadius = 1000;     // Mouse repulsion radius (in world units)
-  var satPushStrength = 15;     // Mouse push force
+  // SATELLITE CONSTANTS (Synced with Hero Scene)
+  var satSpringK = 0.04;        // Matched hero spring feel
+  var satScatterStrength = 1200;
+  var satHoverRadius = 400;     // Reduced from 1000 to be more local
+  var satPushStrength = 8;      // Matched hero push feel relative to scale
 
   // Mouse tracking for satellite repulsion
   var satRaycaster = new THREE.Raycaster();
@@ -1604,9 +1605,9 @@ window.addEventListener('load', function () {
 
       // Slow idle rotation
       satelliteGroup.rotation.y += 0.002;
-      satelliteGroup.rotation.x = 0.15;
+      satelliteGroup.rotation.x = 0;
 
-      // Mouse repulsion: convert mouse to satellite local space
+      // Mouse repulsion: logic unified with rocket/astronaut
       satMouseActive = false;
       if (camProxy.hudOpacity < 0.5) {
         satRaycaster.setFromCamera(mouse, camera);
@@ -1614,7 +1615,11 @@ window.addEventListener('load', function () {
           satelliteGroup.updateMatrixWorld();
           satInverseMatrix.copy(satelliteGroup.matrixWorld).invert();
           satLocalMouse.copy(satPlaneHit).applyMatrix4(satInverseMatrix);
-          satMouseActive = true;
+
+          // Only activate if mouse is actually near the satellite (NDC check or distance)
+          if (Math.abs(mouse.x) < 0.95 && Math.abs(mouse.y) < 0.95) {
+            satMouseActive = true;
+          }
         }
       }
 
@@ -1869,7 +1874,7 @@ document.addEventListener('DOMContentLoaded', function () {
     scrollTimeout = setTimeout(function () {
       userScrolling = false;
       checkSnap();
-    }, 150);
+    }, 50);
   }
 
   function checkSnap() {
@@ -1907,7 +1912,7 @@ document.addEventListener('DOMContentLoaded', function () {
     scrollTimeout = setTimeout(function () {
       userScrolling = false;
       checkSnap();
-    }, 200);
+    }, 50);
   }
 
   window.addEventListener('wheel', handleUserInteraction, { passive: true });
@@ -1927,7 +1932,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function animate() {
     requestAnimationFrame(animate);
-    
+
     // Constant speed approach: increment progress by a fixed step towards target
     var diff = targetProgress - currentProgress;
     var step = 0.012; // Adjusted for a consistent, smooth feel
