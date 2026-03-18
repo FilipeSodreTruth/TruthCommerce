@@ -1969,3 +1969,234 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 });
+
+/* =========================================
+   PAGE BACKGROUND — canvas único, campo estelar virtual
+========================================= */
+
+(function () {
+  const cv  = document.getElementById('bg-canvas');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
+
+  // Paleta de nebulosas — verde da marca (#07dd2b)
+  const NEBULA_COLORS = [
+    [7,  221, 43],   // verde vivo
+    [5,  160, 30],   // verde médio
+    [10, 255, 70],   // verde claro
+    [3,  120, 20],   // verde escuro
+    [20, 200, 100],  // verde-esmeralda
+    [30, 230, 80],   // verde-teal
+  ];
+
+  let W, H, totalH;
+  let scrollY = 0;
+  let stars  = [];
+  let clouds = [];
+
+  /* ── Scroll: compatível com Lenis ── */
+  function trackScroll() {
+    if (window.__lenis) {
+      window.__lenis.on('scroll', ({ scroll }) => { scrollY = scroll; });
+    }
+    window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
+  }
+
+  /* ── Resize ── */
+  function resize() {
+    W = cv.width  = window.innerWidth;
+    H = cv.height = window.innerHeight;
+    totalH = Math.max(document.body.scrollHeight, window.innerHeight);
+    buildStars();
+    buildClouds();
+  }
+
+  /* ── Estrelas distribuídas pela altura total virtual ── */
+  function buildStars() {
+    const count = Math.round((W * totalH) / 6000);
+    stars = Array.from({ length: count }, () => ({
+      x:  Math.random() * W,
+      y:  Math.random() * totalH,
+      r:  Math.random() * 1.4 + 0.2,
+      o:  Math.random() * 0.7 + 0.15,
+      do: (Math.random() - 0.5) * 0.009,
+      dx: (Math.random() - 0.5) * 0.06,
+      dy: (Math.random() - 0.5) * 0.025,
+    }));
+  }
+
+  /* ── Nebulosas distribuídas em zonas ao longo da página ── */
+  function buildClouds() {
+    const zones = Math.ceil(totalH / H) + 1;
+    clouds = [];
+    for (let z = 0; z < zones; z++) {
+      // 2–3 nuvens por zona de viewport
+      const count = 2 + Math.floor(Math.random() * 2);
+      for (let i = 0; i < count; i++) {
+        const yBase = z * H + Math.random() * H;
+        clouds.push(newCloud(yBase));
+      }
+    }
+    // Stagger inicial — evita que todas apareçam ao mesmo tempo
+    clouds.forEach(cl => {
+      cl.a   = Math.random() * cl.ta * 0.8;
+      cl.dir = Math.random() < 0.5 ? 1 : -1;
+    });
+  }
+
+  function newCloud(y) {
+    const col  = NEBULA_COLORS[Math.floor(Math.random() * NEBULA_COLORS.length)];
+    const maxR = Math.max(W, H) * (0.2 + Math.random() * 0.4);
+    return {
+      x:   Math.random() * W,
+      y:   y !== undefined ? y : Math.random() * totalH,
+      rx:  maxR * (0.5 + Math.random() * 0.5),
+      ry:  maxR * (0.25 + Math.random() * 0.4),
+      rot: Math.random() * Math.PI * 2,
+      maxR,
+      a:   0,
+      ta:  0.04 + Math.random() * 0.05,
+      da:  0.00025 + Math.random() * 0.00025,
+      dir: 1,
+      r:   Math.max(0, col[0] + Math.floor((Math.random() - 0.5) * 18)),
+      g:   Math.max(0, col[1] + Math.floor((Math.random() - 0.5) * 18)),
+      b:   Math.max(0, col[2] + Math.floor((Math.random() - 0.5) * 18)),
+    };
+  }
+
+  /* ── Loop de renderização ── */
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const sy = scrollY;
+
+    // --- Nebulosas ---
+    for (let i = clouds.length - 1; i >= 0; i--) {
+      const cl = clouds[i];
+      const sy2 = cl.y - sy;
+
+      // Culling: fora da tela (com margem do maior raio)
+      if (sy2 < -(cl.maxR * 2) || sy2 > H + cl.maxR * 2) {
+        // Ainda anima opacity para quando entrar em foco
+        cl.a = Math.max(0, cl.a - cl.da);
+        continue;
+      }
+
+      cl.a += cl.da * cl.dir;
+      if (cl.dir ===  1 && cl.a >= cl.ta) cl.dir = -1;
+      if (cl.dir === -1 && cl.a <= 0) {
+        // Reinicia a nuvem em nova posição aleatória na página
+        clouds[i] = newCloud();
+        clouds[i].a = 0;
+        continue;
+      }
+
+      ctx.save();
+      ctx.translate(cl.x, sy2);
+      ctx.rotate(cl.rot);
+      ctx.scale(cl.rx / cl.maxR, cl.ry / cl.maxR);
+
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, cl.maxR);
+      g.addColorStop(0,    `rgba(${cl.r},${cl.g},${cl.b},${cl.a})`);
+      g.addColorStop(0.35, `rgba(${cl.r},${cl.g},${cl.b},${cl.a * 0.6})`);
+      g.addColorStop(0.65, `rgba(${cl.r},${cl.g},${cl.b},${cl.a * 0.2})`);
+      g.addColorStop(1,    `rgba(${cl.r},${cl.g},${cl.b},0)`);
+      ctx.beginPath();
+      ctx.arc(0, 0, cl.maxR, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // --- Estrelas ---
+    for (const s of stars) {
+      const sy2 = s.y - sy;
+      if (sy2 < -10 || sy2 > H + 10) {
+        // Drift continua mesmo fora da tela
+        s.x += s.dx; s.y += s.dy;
+        if (s.x > W) s.x = 0; if (s.x < 0) s.x = W;
+        if (s.y > totalH) s.y = 0; if (s.y < 0) s.y = totalH;
+        continue;
+      }
+
+      // Twinkle
+      s.o += s.do;
+      if (s.o > 0.92 || s.o < 0.07) s.do *= -1;
+
+      // Drift
+      s.x += s.dx; s.y += s.dy;
+      if (s.x > W) s.x = 0; if (s.x < 0) s.x = W;
+      if (s.y > totalH) s.y = 0; if (s.y < 0) s.y = totalH;
+
+      // Halo para estrelas maiores
+      if (s.r > 1.0) {
+        const gr = ctx.createRadialGradient(s.x, sy2, 0, s.x, sy2, s.r * 3.5);
+        gr.addColorStop(0, `rgba(200,215,255,${s.o * 0.45})`);
+        gr.addColorStop(1, `rgba(200,215,255,0)`);
+        ctx.beginPath();
+        ctx.arc(s.x, sy2, s.r * 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = gr;
+        ctx.fill();
+      }
+
+      ctx.beginPath();
+      ctx.arc(s.x, sy2, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,215,255,${s.o})`;
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  /* ── Extensão quando o JS expande a página após o load ── */
+  function extendIfGrown() {
+    const newH = Math.max(document.body.scrollHeight, window.innerHeight);
+    if (newH <= totalH) return;
+    const prevH = totalH;
+    totalH = newH;
+
+    // Adiciona estrelas só para a zona nova (sem rebuild — sem flicker)
+    const extra = Math.round((W * (newH - prevH)) / 6000);
+    for (let i = 0; i < extra; i++) {
+      stars.push({
+        x:  Math.random() * W,
+        y:  prevH + Math.random() * (newH - prevH),
+        r:  Math.random() * 1.4 + 0.2,
+        o:  Math.random() * 0.7 + 0.15,
+        do: (Math.random() - 0.5) * 0.009,
+        dx: (Math.random() - 0.5) * 0.06,
+        dy: (Math.random() - 0.5) * 0.025,
+      });
+    }
+
+    // Adiciona nebulosas para as novas zonas
+    const newZones = Math.ceil((newH - prevH) / H);
+    for (let z = 0; z < newZones; z++) {
+      const count = 2 + Math.floor(Math.random() * 2);
+      for (let i = 0; i < count; i++) {
+        clouds.push(newCloud(prevH + z * H + Math.random() * H));
+      }
+    }
+  }
+
+  /* ── Init ── */
+  let _started = false;
+  function start() {
+    if (_started) return;
+    _started = true;
+    resize();
+    draw();
+  }
+
+  window.addEventListener('resize', resize, { passive: true });
+  trackScroll();
+
+  window.addEventListener('load', () => {
+    start();
+    // Three.js / GSAP expandem a página depois do load — rechecamos em cascata
+    setTimeout(extendIfGrown, 400);
+    setTimeout(extendIfGrown, 1200);
+    setTimeout(extendIfGrown, 3000);
+  });
+  if (document.readyState === 'complete') start();
+
+})();
