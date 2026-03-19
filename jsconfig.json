@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "checkJs": false,
+    "allowJs": true,
+    "target": "ES2017",
+    "module": "None"
+  },
+  "exclude": ["node_modules"]
+}

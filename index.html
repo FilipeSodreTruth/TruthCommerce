@@ -34,6 +34,14 @@
   <!-- Lenis Smooth Scroll -->
   <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js" crossorigin="anonymous"></script>
 
+  <!-- YouTube IFrame API -->
+  <script>
+    // Stub: se o YT API carregar antes do script.js, guarda a chamada
+    window._ytAPIReady = false;
+    function onYouTubeIframeAPIReady() { window._ytAPIReady = true; }
+  </script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+
 
 </head>
 
@@ -345,37 +353,65 @@
   <!--  CEO AUTHORITY SECTION                  -->
   <!-- ======================================= -->
   <section id="ceo">
+    <div class="ceo-container">
 
-    <div class="ceo-grid">
-      <div class="ceo-img-col reveal">
-        <img class="ceo-cutout" src="anilo-foppa.png" alt="Fundador Truth Commerce">
-      </div>
-
-      <div class="ceo-text-col reveal">
-        <span class="ceo-tag">/ O Arquiteto por trás da sua operação</span>
-        <h2 class="ceo-title">Engenharia técnica para<br><span class="accent">estabilidade em escala.</span></h2>
-
-        <p class="ceo-bio">Com mais de uma década construindo infraestruturas de e-commerce, a Truth Commerce nasceu de
-          uma convicção: crescimento sustentável exige fundação sólida. Tratamos cada projeto como engenharia de
-          sistemas — diagnóstico profundo e implementação cirúrgica.</p>
-        <p class="ceo-bio" style="font-weight: 600; color: #fff; margin-bottom: 0;">Não vendemos tráfego, construímos a
-          máquina que aguenta o tráfego.</p>
-
-        <div class="ceo-stats">
-          <div>
-            <span class="ceo-stat-num">+120</span>
-            <span class="ceo-stat-label">Operações</span>
-          </div>
-          <div>
-            <span class="ceo-stat-num">98%</span>
-            <span class="ceo-stat-label">Retenção</span>
-          </div>
-          <div>
-            <span class="ceo-stat-num">10+</span>
-            <span class="ceo-stat-label">Anos</span>
-          </div>
+      <!-- INTRO: título grande + descrição + CTA -->
+      <div class="ceo-intro-grid">
+        <div class="ceo-title-block reveal">
+          <span class="ceo-label">/ A Mente por trás da máquina</span>
+          <h2 class="ceo-big-title">Engenharia técnica para<br><span class="accent">estabilidade em escala.</span></h2>
+        </div>
+        <div class="ceo-desc-block reveal">
+          <p class="ceo-desc-text">Com mais de uma década construindo infraestruturas de e-commerce, a Truth Commerce nasceu de uma convicção: crescimento sustentável exige uma fundação cirúrgica.</p>
+          <a href="#contato" class="ceo-cta-pill">
+            <span class="ceo-cta-dot"></span> Iniciar diagnóstico
+          </a>
         </div>
       </div>
+
+      <!-- EDITORIAL: foto sticky à esquerda, cards de dados à direita -->
+      <div class="ceo-editorial-container">
+
+        <!-- Esquerda: Foto com quote flutuante + nome -->
+        <div class="ceo-sticky-visual reveal">
+          <div class="ceo-image-mask">
+            <img class="ceo-cutout" src="anilo.png" alt="Anilo Foppa – CEO Truth Commerce">
+            <div class="ceo-image-overlay"></div>
+            <div class="ceo-floating-quote">
+              <p>"Não vendemos tráfego. Construímos a máquina que aguenta o tráfego."</p>
+            </div>
+          </div>
+          <div class="ceo-name-badge">
+            <span class="ceo-name-text">Anilo Foppa</span>
+            <span class="ceo-role-text">CEO &amp; Fundador</span>
+          </div>
+        </div>
+
+        <!-- Direita: Cards de dados com scroll -->
+        <div class="ceo-scrolling-data">
+
+          <div class="ceo-data-card reveal">
+            <div class="data-num">+120</div>
+            <div class="data-label">Operações Blindadas</div>
+            <p>Mais de uma centena de e-commerces que saíram do caos logístico e rupturas de estoque para a previsibilidade matemática e escala segura.</p>
+          </div>
+
+          <div class="ceo-data-card reveal">
+            <div class="data-num">98<span class="accent">%</span></div>
+            <div class="data-label">Taxa de Retenção</div>
+            <p>Não somos uma agência de setup pontual. Construímos parcerias de longo prazo baseadas em estabilidade contínua e evolução tecnológica.</p>
+          </div>
+
+          <div class="ceo-data-card reveal">
+            <div class="data-num">10<span class="accent">+</span></div>
+            <div class="data-label">Anos de Experiência</div>
+            <p>Uma década a desbravar o ecossistema de vendas online. Do ERP à integração com os maiores marketplaces do mundo, já resolvemos os piores gargalos do mercado.</p>
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
   </section>
 
@@ -546,54 +582,52 @@
 
 
 
-  <!-- SHOWREEL / DEPOIMENTOS — Intro (above the video) -->
-  <div class="sr-intro-section" id="sr-intro-section">
-    <div class="sr-intro-grid">
+  <!-- SHOWREEL SECTION -->
+  <div class="sr-scroll-track" id="showreel">
+    <div class="sr-sticky-frame">
 
-      <!-- Left: Giant title (2 lines) -->
-      <div class="sr-title-block">
-        <span class="sr-label">/ CASOS DE ESTUDO</span>
-        <h2 class="sr-big-title">O resultado de uma base<br><span class="sr-title-green">sólida.</span></h2>
+      <!-- Textos Introdutórios -->
+      <div class="sr-intro-layer" id="sr-intro">
+        <span class="sr-label-tag">/ SHOWREEL 2026</span>
+        <h2 class="sr-main-title">Sistemas que suportam a <span class="accent">pressão da escala.</span></h2>
+        <p class="sr-main-desc">Veja como transformamos operações engessadas em máquinas de alta performance. De migrações complexas a arquiteturas headless, construímos para velocidade e estabilidade extrema.</p>
       </div>
 
-      <!-- Right: Description + CTA -->
-      <div class="sr-desc-block">
-        <p class="sr-desc-text">Esqueça as promessas vazias. Veja como estabilizamos o estoque e multiplicamos as vendas das marcas que confiam a sua operação à Truth Commerce.</p>
-        <a href="#contato" class="sr-cta-pill">
-          <span class="sr-cta-dot"></span>
-          Iniciar diagnóstico
-        </a>
-      </div>
+      <!-- Container do Vídeo -->
+      <div class="sr-video-wrap" id="sr-video-wrap">
 
-    </div>
-
-  </div>
-
-  <!-- The video scroll animation section — UNTOUCHED -->
-  <section id="showreel-section">
-    <div class="sticky-container">
-      <div id="video-start-anchor"></div>
-      <div id="video-end-anchor"></div>
-
-      <div class="showreel-ui-layer" id="ui-layer">
-        <div class="showreel-labels">
-          <span>Showreel 2026</span>
-          <span>Casos de Estudo</span>
+        <div class="sr-yt-wrapper">
+          <div id="sr-yt-player"></div>
         </div>
-        <button class="play-reel-btn">
-          <span class="play-text">PLAY</span>
-          <div class="play-icon-wrapper">
-            <svg class="play-icon" viewBox="0 0 24 24">
-              <path d="M5 3l14 9-14 9V3z" />
-            </svg>
-          </div>
-          <span class="play-text">REEL</span>
-        </button>
-      </div>
-    </div>
-  </section>
 
-  <canvas id="canvas-showreel"></canvas>
+        <!-- Interface Dashboard (surge no final) -->
+        <div class="sr-ui-layer" id="sr-ui">
+
+          <div class="sr-ui-center">
+            <button class="sr-play-btn">
+              <div class="sr-play-circle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <polygon points="5 3 19 12 5 21 5 3" fill="currentColor"></polygon>
+                </svg>
+              </div>
+              <span class="sr-play-text">PLAY</span>
+            </button>
+          </div>
+
+          <div class="sr-ui-bottom">
+            <div class="sr-status">
+              <div class="sr-status-dot"></div>
+              SYSTEMS ONLINE
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+  <!-- FIM SHOWREEL -->
 
 
 

@@ -863,20 +863,6 @@ document.addEventListener('DOMContentLoaded', function () {
           });
         });
 
-        // CEO Image Parallax
-        gsap.fromTo('.ceo-cutout',
-          { y: 80 },
-          {
-            y: -60,
-            ease: "none",
-            scrollTrigger: {
-              trigger: "#ceo",
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true
-            }
-          }
-        );
 
         /* OLD STACKING CARDS SCROLLTRIGGER (COMMENTED OUT)
         if (isMobile) {
@@ -1673,9 +1659,9 @@ window.addEventListener('load', function () {
 });
 
 
-// ── Showreel: Lusion-style sticky scroll animation ──────────────────────
+// ── Showreel: LERP scroll animation ──────────────────────
 document.addEventListener('DOMContentLoaded', function () {
-  var canvas = document.getElementById('canvas-showreel');
+  var canvas = document.getElementById('canvas-showreel-disabled');
   if (!canvas || typeof THREE === 'undefined') return;
 
   var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
@@ -1963,12 +1949,129 @@ document.addEventListener('DOMContentLoaded', function () {
 
     renderer.render(scene, camera);
   }
-
+  
   requestAnimationFrame(function () {
     recalcRects(); calcScrollPositions(); onScroll(); animate();
   });
 
 });
+
+// ── Showreel LERP animation + YouTube IFrame API ─────────────────────────
+(function () {
+  var track      = document.getElementById('showreel');
+  var videoWrap  = document.getElementById('sr-video-wrap');
+  var introLayer = document.getElementById('sr-intro');
+  var uiLayer    = document.getElementById('sr-ui');
+  var playBtn    = document.querySelector('.sr-play-btn');
+  if (!track || !videoWrap) return;
+
+  // ── YouTube Player ──────────────────────────────────
+  var ytPlayer    = null;
+  var ytReady     = false;
+  var shouldPlay  = false;
+
+  function initYT() {
+    if (typeof YT === 'undefined' || !YT.Player) {
+      setTimeout(initYT, 100);
+      return;
+    }
+    ytPlayer = new YT.Player('sr-yt-player', {
+      videoId: '_-AS5DtDeqs',
+      playerVars: {
+        controls: 0, showinfo: 0, rel: 0,
+        modestbranding: 1, playsinline: 1,
+        iv_load_policy: 3, disablekb: 1,
+        mute: 1, loop: 1, playlist: '_-AS5DtDeqs',
+        enablejsapi: 1,
+      },
+      events: {
+        onReady: function (e) {
+          ytReady = true;
+          e.target.mute();
+          if (shouldPlay) e.target.playVideo();
+        }
+      }
+    });
+  }
+
+  // Trigger after DOM + YT API both ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initYT);
+  } else {
+    initYT();
+  }
+
+  // ── LERP Scroll ─────────────────────────────────────
+  var isMob = window.innerWidth <= 768;
+  var startW, startH, endW, endH;
+  function setBreakpoint() {
+    isMob  = window.innerWidth <= 768;
+    startW = isMob ? 82 : 45;  startH = isMob ? 28 : 35;
+    endW   = isMob ? 92 : 88;  endH   = isMob ? 72 : 82;
+  }
+  setBreakpoint();
+
+  var targetP = 0, currentP = 0, ease = 0.08;
+  var animEnd = 0.45, animDone = false;
+
+  function captureScroll() {
+    var rect = track.getBoundingClientRect();
+    var raw  = -rect.top / (track.offsetHeight - window.innerHeight);
+    targetP = Math.min(Math.max(raw, 0), 1);
+  }
+  window.addEventListener('scroll', captureScroll, { passive: true });
+  if (window.__lenis) window.__lenis.on('scroll', captureScroll);
+  captureScroll();
+
+  // ── Play button ──────────────────────────────────────
+  if (playBtn) {
+    playBtn.addEventListener('click', function () {
+      if (ytPlayer && ytReady) { ytPlayer.seekTo(0, true); ytPlayer.playVideo(); }
+      uiLayer.style.opacity       = '0';
+      uiLayer.style.pointerEvents = 'none';
+      uiLayer.classList.add('sr-ui-playing');
+    });
+  }
+
+  // ── Render loop ──────────────────────────────────────
+  var ytWrapper = videoWrap.querySelector('.sr-yt-wrapper');
+
+  function renderLoop() {
+    currentP += (targetP - currentP) * ease;
+
+    var expansion = Math.min(currentP / animEnd, 1);
+    var ep = 1 - Math.pow(1 - expansion, 3);
+
+    videoWrap.style.width        = (startW + (endW - startW) * ep) + 'vw';
+    videoWrap.style.height       = (startH + (endH - startH) * ep) + 'vh';
+    videoWrap.style.borderRadius = (28 + (20 - 28) * ep) + 'px';
+
+    var introFade = Math.min(currentP / (animEnd * 0.6), 1);
+    introLayer.style.opacity   = Math.max(1 - introFade * 1.5, 0);
+    introLayer.style.transform = 'translateY(' + (introFade * 140) + 'px) scale(' + (1 - introFade * 0.04) + ')';
+
+    if (ytWrapper) ytWrapper.style.opacity = 0.2 + 0.8 * ep;
+
+    // Start video once when animation finishes (only once)
+    if (!animDone && ep >= 0.98) {
+      animDone = true; shouldPlay = true;
+      if (ytPlayer && ytReady) ytPlayer.playVideo();
+    }
+
+    // Dashboard UI
+    if (!uiLayer.classList.contains('sr-ui-playing')) {
+      var uiO = currentP > animEnd * 0.9
+        ? Math.min((currentP - animEnd * 0.9) / 0.06, 1) : 0;
+      uiLayer.style.opacity       = uiO;
+      uiLayer.style.pointerEvents = uiO > 0.5 ? 'auto' : 'none';
+    }
+
+    requestAnimationFrame(renderLoop);
+  }
+
+  window.addEventListener('resize', function () { setBreakpoint(); captureScroll(); }, { passive: true });
+  requestAnimationFrame(renderLoop);
+})();
 
 /* =========================================
    PAGE BACKGROUND — canvas único, campo estelar virtual
